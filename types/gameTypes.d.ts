@@ -11,17 +11,23 @@ type Player = {
   id: string;
   name: string;
   imgUrl: string;
-  score: number;
+  score: Rounds;
   state: "explainer" | "guesser";
 };
 
-type GameInit = number;
+type Rounds = number;
+type Code = string;
 
 type PlayerInit = Omit<Player, "id" | "score" | "state">;
 
 type CreateGameInit = {
   player: PlayerInit;
-  rounds: GameInit;
+  rounds: Rounds;
+};
+
+type JoinGameInit = {
+  player: PlayerInit;
+  code: Code;
 };
 
 type Movie = {
