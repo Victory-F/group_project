@@ -15,6 +15,8 @@ type Player = {
   state: "explainer" | "guesser";
 };
 
+type PlayerInit = Omit<Player, "id" | "score" | "state">;
+
 type Movie = {
   name: string;
   poster: string;
