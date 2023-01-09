@@ -15,7 +15,14 @@ type Player = {
   state: "explainer" | "guesser";
 };
 
+type GameInit = number;
+
 type PlayerInit = Omit<Player, "id" | "score" | "state">;
+
+type CreateGameInit = {
+  player: PlayerInit;
+  rounds: GameInit;
+};
 
 type Movie = {
   name: string;
