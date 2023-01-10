@@ -31,6 +31,7 @@ type JoinGameInit = {
 };
 
 type Movie = {
+  id: string;
   name: string;
   poster: string;
 };

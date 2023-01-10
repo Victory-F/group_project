@@ -3,11 +3,14 @@ import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { Server, Socket } from "socket.io";
+import axios from "axios";
+
 import {
   Callback,
   CreateGameInit,
   Game,
   JoinGameInit,
+  Movie,
   Player,
 } from "../types/gameTypes";
 
@@ -22,6 +25,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let games: Game[] = [];
+
+//movie
+
+const apiKey = "a0fdd7d682edade22bbce21b7ecf4554";
+const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=10`;
+axios
+  .get(url)
+  .then((response) => {
+    const popularMovies = response.data.results;
+    console.log(popularMovies);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 io.on("connection", (socket: Socket) => {
   console.log("connected", socket.id); // true
