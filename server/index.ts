@@ -73,10 +73,45 @@ io.on("connection", (socket: Socket) => {
   );
 
   socket.on("join-game", (joinGameInit: JoinGameInit, callback: Callback) => {
-    //check the code
-    //create player
-    //add player to the game with this code
-    //send true or false back
+    try {
+      //check the code
+      const canJoin: boolean = games.find(
+        (g) =>
+          g.id === joinGameInit.code &&
+          g.players.length < 10 &&
+          g.state === "lobby"
+      )
+        ? true
+        : false;
+
+      if (
+        !joinGameInit ||
+        !joinGameInit.player ||
+        !joinGameInit.player.name ||
+        !joinGameInit.player.imgUrl ||
+        !canJoin
+      ) {
+        callback({ success: false, message: "access denied" });
+      } else {
+        //create player
+        const player: Player = {
+          id: socket.id,
+          name: joinGameInit.player.name,
+          imgUrl: joinGameInit.player.imgUrl,
+          score: 0,
+          state: "guesser",
+        };
+        //add player to the game with this code
+        games = games.map((g) =>
+          g.id === joinGameInit.code
+            ? { ...g, players: [...g.players, player] }
+            : g
+        );
+        callback({ success: true, message: "" });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   });
 });
 
