@@ -12,7 +12,9 @@ export const JoinGame = () => {
     e.preventDefault();
 
     socket.emit("join-game", joinGameInit, (response: Reply) => {
-      if (response) {
+      if (!response.success) {
+        console.log(response.message);
+      } else {
         navigate("/lobby");
       }
     });
