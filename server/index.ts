@@ -132,6 +132,23 @@ io.on("connection", (socket: Socket) => {
       console.log(e);
     }
   });
+  //start game
+  socket.on("start-game", (playerId: string, gameId: string) => {
+    const game: Game | undefined = games.find(
+      (game) =>
+        game.id === gameId &&
+        game.players.find(
+          (player) => player.id === playerId && player.state === "explainer"
+        )
+    );
+    if (game) {
+      games = games.map((g) =>
+        g.id === gameId ? { ...g, state: "running" } : g
+      );
+      socket.join(gameId);
+      io.to(gameId).emit("send-started", true);
+    }
+  });
 });
 
 server.listen(PORT, () => {
