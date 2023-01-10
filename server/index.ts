@@ -24,13 +24,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 let games: Game[] = [];
 
 io.on("connection", (socket: Socket) => {
-  console.log("Connected: ", socket.id);
+  console.log("connected", socket.id); // true
 
-  // socket.emit("message", "HELLO!");
-  // socket.on("message from mahtab", (message) => {
-  //   console.log(message);
-  // });
+  socket.on("disconnect", () => {
+    console.log("disconected", socket.id); // false
+  });
 
+  //create game
   socket.on(
     "create-game",
     (createGameInit: CreateGameInit, callback: Callback) => {
@@ -72,6 +72,7 @@ io.on("connection", (socket: Socket) => {
     }
   );
 
+  //join game
   socket.on("join-game", (joinGameInit: JoinGameInit, callback: Callback) => {
     try {
       //check the code
@@ -108,6 +109,24 @@ io.on("connection", (socket: Socket) => {
             : g
         );
         callback({ success: true, message: "" });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  //lobby
+  socket.on("player-id", (playerId: string, callback: Callback) => {
+    try {
+      const game: Game | undefined = games.find(
+        (g) => g.players.find((p) => p.id === playerId) && g.state === "lobby"
+      );
+      if (game) {
+        callback({ success: true, message: "" });
+        socket.join(game.id);
+        io.to(game.id).emit("lobby", game);
+      } else {
+        callback({ success: false, message: "access denied" });
       }
     } catch (e) {
       console.log(e);
