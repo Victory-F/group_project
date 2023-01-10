@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { socket } from "./socket/socket";
-
+import { HomePage, CreateGame, JoinGame, LobbyPage } from "./pages";
+import { Routes, Route } from "react-router-dom";
 function App() {
   useEffect(() => {
     socket.on("message", (message) => {
@@ -12,9 +13,12 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <h1>Home!</h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/create" element={<CreateGame />} />
+      <Route path="/join" element={<JoinGame />} />
+      <Route path="/Lobby" element={<LobbyPage />} />
+    </Routes>
   );
 }
 
