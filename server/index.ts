@@ -79,6 +79,9 @@ io.on("connection", (socket: Socket) => {
             rounds: createGameInit.rounds,
             players: [player],
             state: "lobby",
+            movies: [],
+            clues: [],
+            guesses: [],
           };
           games = [...games, game];
           callback({ success: true, message: "" });

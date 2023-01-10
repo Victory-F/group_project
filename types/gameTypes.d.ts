@@ -5,6 +5,9 @@ type Game = {
   rounds: number;
   players: Player[];
   state: GameState;
+  movies: Movie[];
+  clues: Clue[];
+  guesses: Guess[];
 };
 
 type Player = {
@@ -42,6 +45,8 @@ type Guess = {
   text: string;
   state: "red" | "yellow" | "green";
 };
+
+type Clue = string;
 
 type Callback = (response: Reply) => void;
 
