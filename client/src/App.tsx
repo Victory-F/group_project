@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { socket } from "./socket/socket";
-import { HomePage, CreateGame, JoinGame, LobbyPage } from "./pages";
+import { HomePage, CreateGame, JoinGame, LobbyPage, GamePage } from "./pages";
 import { Routes, Route } from "react-router-dom";
 function App() {
   useEffect(() => {
@@ -18,6 +18,7 @@ function App() {
       <Route path="/create" element={<CreateGame />} />
       <Route path="/join" element={<JoinGame />} />
       <Route path="/Lobby" element={<LobbyPage />} />
+      <Route path="/game" element={<GamePage />} />
     </Routes>
   );
 }
