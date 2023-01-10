@@ -153,6 +153,21 @@ io.on("connection", (socket: Socket) => {
       console.log(e);
     }
   });
+  //game
+
+  socket.on("game-playerId", (playerId: string) => {
+    try {
+      const game: Game | undefined = games.find(
+        (g) => g.players.find((p) => p.id === playerId) && g.state === "running"
+      );
+      if (game) {
+        socket.join(game.id);
+        io.to(game.id).emit("game", game);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
 });
 
 server.listen(PORT, () => {
