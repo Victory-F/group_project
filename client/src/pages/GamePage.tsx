@@ -17,7 +17,20 @@ export const GamePage = () => {
     <div>
       <h2> this is the game page</h2>
       <h2>Code: {game?.id}</h2>
-
+      {game?.players.find((player) => player.id === thisPlayerId)?.state ===
+        "explainer" && (
+        <form>
+          <input placeholder="for explainer" />
+          <button> send the emojies</button>
+        </form>
+      )}
+      {game?.players.find((player) => player.id === thisPlayerId)?.state ===
+        "guesser" && (
+        <form>
+          <input placeholder="for guesser" />
+          <button> write your guess</button>
+        </form>
+      )}
       {game?.players.map((p) => (
         <div>
           {" "}
