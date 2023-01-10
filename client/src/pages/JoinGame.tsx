@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { JoinGameInit } from "../../../types/gameTypes";
+import { JoinGameInit, Reply } from "../../../types/gameTypes";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../socket/socket";
 export const JoinGame = () => {
   const [joinGameInit, setJoinGameInit] = useState<JoinGameInit>({
     player: { name: "", imgUrl: "" },
@@ -9,7 +10,13 @@ export const JoinGame = () => {
   const navigate = useNavigate();
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/lobby");
+
+    socket.emit("join-game", joinGameInit, (response: Reply) => {
+      if (response) {
+        navigate("/lobby");
+      }
+    });
+
     console.log(joinGameInit, "this is join game init");
   };
   return (

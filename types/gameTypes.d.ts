@@ -41,3 +41,10 @@ type Guess = {
   text: string;
   state: "red" | "yellow" | "green";
 };
+
+type Callback = (response: Reply) => void;
+
+type Reply = {
+  success: boolean;
+  message: string;
+};

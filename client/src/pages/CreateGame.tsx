@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CreateGameInit } from "../../../types/gameTypes";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../socket/socket";
 export const CreateGame = () => {
   const [createGameInit, setCreateGameInit] = useState<CreateGameInit>({
     player: { name: "", imgUrl: "" },
@@ -9,6 +10,9 @@ export const CreateGame = () => {
   const navigate = useNavigate();
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    socket.emit("create-game", createGameInit);
+
     navigate("/lobby");
     console.log(createGameInit, "this is create game init");
   };
