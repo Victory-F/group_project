@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Game, Movie } from "../../../types/gameTypes";
-import { MovieCard, PlayerCard } from "../components";
+import { GuessCard, MovieCard, PlayerCard } from "../components";
 import { socket } from "../socket/socket";
 
 export const GamePage = () => {
@@ -14,7 +14,7 @@ export const GamePage = () => {
   const [message, setMessage] = useState<string>("");
 
   const thisPlayerId = socket.id;
-
+  console.log(thisPlayerId);
   const explainer =
     game?.players.find((player) => player.id === thisPlayerId)?.state ===
     "explainer";
@@ -45,11 +45,11 @@ export const GamePage = () => {
     socket.emit("game-playerId", thisPlayerId);
     socket.on("game", (gameFromServer: Game) => {
       setGame(gameFromServer);
-      console.log(gameFromServer);
+
       if (!gameFromServer.currentMovie) {
         getMovies();
       }
-      console.log(movies);
+
       if (gameFromServer.state === "ended") {
         navigate("/");
       }
@@ -61,63 +61,28 @@ export const GamePage = () => {
     socket.emit("game-playerId", thisPlayerId, "", message);
     setMessage("");
   };
-
+  console.log(game);
   return (
-    <div>
-      <h2> this is the game page </h2>
-      <h2>Code: {game?.id}</h2>
+    <GamePageWrapper>
+      <form onSubmit={submitForm}>
+        <input
+          placeholder={
+            game?.players.find((player) => player.id === thisPlayerId)
+              ?.state === "explainer"
+              ? "Type Your Clue"
+              : "Type Your Guess"
+          }
+          value={message}
+          onChange={(e: React.FormEvent<HTMLInputElement>) =>
+            setMessage(e.currentTarget.value)
+          }
+        />
+        <button type="submit"> send</button>
+      </form>
       <GameWrapper>
-        <form onSubmit={submitForm}>
-          <input
-            placeholder={
-              game?.players.find((player) => player.id === thisPlayerId)
-                ?.state === "explainer"
-                ? "Type Your Clue"
-                : "Type Your Guess"
-            }
-            value={message}
-            onChange={(e: React.FormEvent<HTMLInputElement>) =>
-              setMessage(e.currentTarget.value)
-            }
-          />
-          <button type="submit"> send</button>
-        </form>
-
-        <MoviesWrapper>
-          {explainer && movies
-            ? movies.map((movie) => (
-                <div>
-                  <MovieCard movie={movie} />{" "}
-                  {movies.length > 1 && (
-                    <button
-                      onClick={() => {
-                        socket.emit(
-                          "game-playerId",
-                          thisPlayerId,
-                          movies.filter((m) => m.id === movie.id)
-                        );
-                        setMovies(movies.filter((m) => m.id === movie.id));
-                      }}
-                    >
-                      choose
-                    </button>
-                  )}
-                </div>
-              ))
-            : game &&
-              game.currentMovie && <MovieCard movie={game.currentMovie} />}
-        </MoviesWrapper>
-        <div>
-          {game?.clues.map((c) => (
-            <p>Clue: {c}</p>
-          ))}
-        </div>
-        <div>
+        <GuessesWrapper>
           {game?.guesses.map((g) => (
-            <div>
-              <p>player name : {g.playerName}</p>
-              <p> guess: {g.text}</p>
-              <p>State: {g.state}</p>
+            <GuessCard guess={g}>
               <div>
                 {explainer && (
                   <div>
@@ -163,9 +128,39 @@ export const GamePage = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </GuessCard>
           ))}
-        </div>
+        </GuessesWrapper>
+        <MoviesWrapper>
+          {explainer && movies
+            ? movies.map((movie) => (
+                <div>
+                  <MovieCard movie={movie} />{" "}
+                  {movies.length > 1 && (
+                    <button
+                      onClick={() => {
+                        socket.emit(
+                          "game-playerId",
+                          thisPlayerId,
+                          movies.filter((m) => m.id === movie.id)
+                        );
+                        setMovies(movies.filter((m) => m.id === movie.id));
+                      }}
+                    >
+                      choose
+                    </button>
+                  )}
+                </div>
+              ))
+            : game &&
+              game.currentMovie && <MovieCard movie={game.currentMovie} />}
+          <div>
+            {game?.clues.map((c) => (
+              <p>Clue: {c}</p>
+            ))}
+          </div>
+        </MoviesWrapper>
+
         <PlayersWrapper>
           {game?.players.map((p) => (
             <PlayerCard player={p} />
@@ -181,21 +176,35 @@ export const GamePage = () => {
           Continue
         </button>
       )}
-    </div>
+    </GamePageWrapper>
   );
 };
 
 const MoviesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-
   gap: 5vw;
+  width: 60vw;
 `;
 
 const GameWrapper = styled.div`
   display: flex;
+  gap: 5vw;
 `;
 const PlayersWrapper = styled.div`
   display: flex;
   flex-direction: column;
+`;
+const GuessesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const GamePageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3vw;
+  height: 99vh;
+  width: 99vw;
+  padding: 1vw;
 `;
