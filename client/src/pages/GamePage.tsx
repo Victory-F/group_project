@@ -9,7 +9,7 @@ export const GamePage = () => {
   const [game, setGame] = useState<Game | null>(null);
 
   const [movies, setMovies] = useState<Movie[]>([]);
-
+  const [message, setMessage] = useState<string>("");
   const thisPlayerId = socket.id;
 
   const explainer =
@@ -48,25 +48,33 @@ export const GamePage = () => {
     };
     getMovies();
   }, []);
+  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    socket.emit("game-playerId", thisPlayerId, message);
+    setMessage("");
+  };
 
   return (
     <div>
       <h2> this is the game page </h2>
       <h2>Code: {game?.id}</h2>
-      {game?.players.find((player) => player.id === thisPlayerId)?.state ===
-        "explainer" && (
-        <form>
-          <input placeholder="for explainer" />
-          <button> send the emojies</button>
-        </form>
-      )}
-      {game?.players.find((player) => player.id === thisPlayerId)?.state ===
-        "guesser" && (
-        <form>
-          <input placeholder="for guesser" />
-          <button> write your guess</button>
-        </form>
-      )}
+
+      <form onSubmit={submitForm}>
+        <input
+          placeholder={
+            game?.players.find((player) => player.id === thisPlayerId)
+              ?.state === "explainer"
+              ? "Type Your Clue"
+              : "Type Your Guess"
+          }
+          value={message}
+          onChange={(e: React.FormEvent<HTMLInputElement>) =>
+            setMessage(e.currentTarget.value)
+          }
+        />
+        <button type="submit"> send the emojies</button>
+      </form>
+
       {game?.players.map((p) => (
         <div>
           {" "}
@@ -93,6 +101,19 @@ export const GamePage = () => {
             </div>
           ))}
       </MoviesWrapper>
+      <div>
+        {game?.clues.map((c) => (
+          <p>Clue: {c}</p>
+        ))}
+      </div>
+      <div>
+        {game?.guesses.map((g) => (
+          <div>
+            <p>player name : {g.playerName}</p>
+            <p> guess: {g.text}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

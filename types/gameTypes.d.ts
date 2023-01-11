@@ -42,7 +42,7 @@ type Guess = {
   playerId: string;
   playerName: string;
   text: string;
-  state: "red" | "yellow" | "green";
+  state: "red" | "yellow" | "green" | "white";
 };
 
 type Clue = string;
