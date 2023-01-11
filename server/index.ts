@@ -6,6 +6,7 @@ import { Server, Socket } from "socket.io";
 
 import {
   Callback,
+  Clue,
   CreateGameInit,
   Game,
   Guess,
@@ -160,19 +161,68 @@ io.on("connection", (socket: Socket) => {
 
   //game
 
-  socket.on("game-playerId", (playerId: string) => {
+  socket.on("game-playerId", (playerId: string, message: string) => {
     try {
-      const game: Game | undefined = games.find(
+      const gameId: string | undefined = games.find(
         (g) => g.players.find((p) => p.id === playerId) && g.state === "running"
-      );
-      if (game) {
-        socket.emit("game", game);
+      )?.id;
+
+      const playerState = games
+        .find((game) => game.id === gameId)
+        ?.players.find((player) => player.id === playerId)?.state;
+
+      const playerName =
+        games
+          .find((game) => game.id === gameId)
+          ?.players.find((player) => player.id === playerId)?.name || "";
+
+      if (gameId) {
+        if (message) {
+          if (playerState === "explainer") {
+            games = games.map((g) =>
+              g.id === gameId ? { ...g, clues: [...g.clues, message] } : g
+            );
+          } else if (playerState === "guesser") {
+            const guess: Guess = {
+              playerId: playerId,
+              playerName: playerName,
+              text: message,
+              state: "white",
+            };
+            games = games.map((g) =>
+              g.id === gameId ? { ...g, guesses: [...g.guesses, guess] } : g
+            );
+          }
+        }
+        socket.join(gameId);
+        io.to(gameId).emit(
+          "game",
+          games.find((g) => g.id === gameId)
+        );
       }
     } catch (e) {
       console.log(e);
     }
   });
 
+  //emoji
+  // socket.on("emoji", (gameId: string, message: Clue) => {
+  //   try {
+  //     let game: Game | undefined = games.find(
+  //       (g) => g.id === gameId && g.state === "running"
+  //     );
+  //     if (game) {
+  //       games = games.map((g) =>
+  //         g.id === gameId ? { ...g, clues: [...g.clues, message] } : g
+  //       );
+  //       socket.emit("game", game);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // });
+
+  //sjfhdkthjl
   socket.on("send-guess", (gameId: string, guess: Guess) => {
     try {
       const game: Game | undefined = games.find((g) => g.id === gameId);
