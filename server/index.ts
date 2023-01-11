@@ -11,6 +11,7 @@ import {
   Game,
   Guess,
   JoinGameInit,
+  Movie,
   Player,
 } from "../types/gameTypes";
 
@@ -161,82 +162,74 @@ io.on("connection", (socket: Socket) => {
 
   //game
 
-  socket.on("game-playerId", (playerId: string, message: string) => {
-    try {
-      const gameId: string | undefined = games.find(
-        (g) => g.players.find((p) => p.id === playerId) && g.state === "running"
-      )?.id;
+  socket.on(
+    "game-playerId",
+    (playerId: string, movie: Movie, message: string, guessId: string) => {
+      try {
+        const gameId: string | undefined = games.find(
+          (g) =>
+            g.players.find((p) => p.id === playerId) && g.state === "running"
+        )?.id;
 
-      const playerState = games
-        .find((game) => game.id === gameId)
-        ?.players.find((player) => player.id === playerId)?.state;
-
-      const playerName =
-        games
+        const playerState = games
           .find((game) => game.id === gameId)
-          ?.players.find((player) => player.id === playerId)?.name || "";
+          ?.players.find((player) => player.id === playerId)?.state;
 
-      if (gameId) {
-        if (message) {
+        const playerName =
+          games
+            .find((game) => game.id === gameId)
+            ?.players.find((player) => player.id === playerId)?.name || "";
+
+        if (gameId) {
           if (playerState === "explainer") {
-            games = games.map((g) =>
-              g.id === gameId ? { ...g, clues: [...g.clues, message] } : g
-            );
+            if (movie && !message && !guessId) {
+              games = games.map((g) =>
+                g.id === gameId ? { ...g, currentMovie: movie } : g
+              );
+              console.log(games);
+            } else if (message && !guessId) {
+              games = games.map((g) =>
+                g.id === gameId ? { ...g, clues: [...g.clues, message] } : g
+              );
+            } else if (message && guessId) {
+              games = games.map((g) =>
+                g.id === gameId
+                  ? {
+                      ...g,
+                      guesses: g.guesses.map((guess) =>
+                        guess.id === guessId
+                          ? { ...guess, state: message }
+                          : guess
+                      ),
+                    }
+                  : g
+              );
+            }
           } else if (playerState === "guesser") {
-            const guess: Guess = {
-              playerId: playerId,
-              playerName: playerName,
-              text: message,
-              state: "white",
-            };
-            games = games.map((g) =>
-              g.id === gameId ? { ...g, guesses: [...g.guesses, guess] } : g
-            );
+            if (message) {
+              const guess: Guess = {
+                id: Math.random().toString().slice(2, 8),
+                playerId: playerId,
+                playerName: playerName,
+                text: message,
+                state: "white",
+              };
+              games = games.map((g) =>
+                g.id === gameId ? { ...g, guesses: [...g.guesses, guess] } : g
+              );
+            }
           }
+          socket.join(gameId);
+          io.to(gameId).emit(
+            "game",
+            games.find((g) => g.id === gameId)
+          );
         }
-        socket.join(gameId);
-        io.to(gameId).emit(
-          "game",
-          games.find((g) => g.id === gameId)
-        );
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
-  });
-
-  //emoji
-  // socket.on("emoji", (gameId: string, message: Clue) => {
-  //   try {
-  //     let game: Game | undefined = games.find(
-  //       (g) => g.id === gameId && g.state === "running"
-  //     );
-  //     if (game) {
-  //       games = games.map((g) =>
-  //         g.id === gameId ? { ...g, clues: [...g.clues, message] } : g
-  //       );
-  //       socket.emit("game", game);
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // });
-
-  //sjfhdkthjl
-  socket.on("send-guess", (gameId: string, guess: Guess) => {
-    try {
-      const game: Game | undefined = games.find((g) => g.id === gameId);
-      if (game && guess) {
-        games = games.map((g) =>
-          g.id === game.id ? { ...g, guesses: [...g.guesses, guess] } : g
-        );
-        socket.join(gameId);
-        socket.emit("game", game);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  );
 });
 
 server.listen(PORT, () => {

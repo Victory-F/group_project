@@ -7,6 +7,7 @@ type Game = {
   state: GameState;
   clues: Clue[];
   guesses: Guess[];
+  currentMovie?: Movie;
 };
 
 type Player = {
@@ -39,10 +40,11 @@ type Movie = {
 };
 
 type Guess = {
+  id: string;
   playerId: string;
   playerName: string;
   text: string;
-  state: "red" | "yellow" | "green" | "white";
+  state: "red" | "yellow" | "green" | "white" | string;
 };
 
 type Clue = string;
