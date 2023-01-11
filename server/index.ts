@@ -175,7 +175,6 @@ io.on("connection", (socket: Socket) => {
           (g) =>
             g.players.find((p) => p.id === playerId) && g.state === "running"
         )?.id;
-
         let playerState = games
           .find((game) => game.id === gameId)
           ?.players.find((player) => player.id === playerId)?.state;
