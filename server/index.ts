@@ -3,14 +3,13 @@ import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { Server, Socket } from "socket.io";
-import axios from "axios";
 
 import {
   Callback,
   CreateGameInit,
   Game,
+  Guess,
   JoinGameInit,
-  Movie,
   Player,
 } from "../types/gameTypes";
 
@@ -25,20 +24,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let games: Game[] = [];
-
-//movie
-
-const apiKey = "a0fdd7d682edade22bbce21b7ecf4554";
-const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=10`;
-axios
-  .get(url)
-  .then((response) => {
-    const popularMovies = response.data.results;
-    console.log(popularMovies);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
 
 io.on("connection", (socket: Socket) => {
   console.log("connected", socket.id); // true
@@ -79,7 +64,6 @@ io.on("connection", (socket: Socket) => {
             rounds: createGameInit.rounds,
             players: [player],
             state: "lobby",
-            movies: [],
             clues: [],
             guesses: [],
           };
@@ -173,6 +157,7 @@ io.on("connection", (socket: Socket) => {
       console.log(e);
     }
   });
+
   //game
 
   socket.on("game-playerId", (playerId: string) => {
@@ -181,8 +166,22 @@ io.on("connection", (socket: Socket) => {
         (g) => g.players.find((p) => p.id === playerId) && g.state === "running"
       );
       if (game) {
-        socket.join(game.id);
-        io.to(game.id).emit("game", game);
+        socket.emit("game", game);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  socket.on("send-guess", (gameId: string, guess: Guess) => {
+    try {
+      const game: Game | undefined = games.find((g) => g.id === gameId);
+      if (game && guess) {
+        games = games.map((g) =>
+          g.id === game.id ? { ...g, guesses: [...g.guesses, guess] } : g
+        );
+        socket.join(gameId);
+        socket.emit("game", game);
       }
     } catch (e) {
       console.log(e);

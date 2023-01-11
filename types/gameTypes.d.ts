@@ -5,7 +5,6 @@ type Game = {
   rounds: number;
   players: Player[];
   state: GameState;
-  movies: Movie[];
   clues: Clue[];
   guesses: Guess[];
 };
