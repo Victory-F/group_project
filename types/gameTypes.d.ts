@@ -7,7 +7,7 @@ type Game = {
   state: GameState;
   clues: Clue[];
   guesses: Guess[];
-  currentMovie?: Movie;
+  currentMovie?: Movie | null;
 };
 
 type Player = {

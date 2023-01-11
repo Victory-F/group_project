@@ -6,7 +6,6 @@ import { Server, Socket } from "socket.io";
 
 import {
   Callback,
-  Clue,
   CreateGameInit,
   Game,
   Guess,
@@ -164,7 +163,13 @@ io.on("connection", (socket: Socket) => {
 
   socket.on(
     "game-playerId",
-    (playerId: string, movie: Movie, message: string, guessId: string) => {
+    (
+      playerId: string,
+      movie: Movie,
+      message: string,
+      guessId: string,
+      next: boolean
+    ) => {
       try {
         const gameId: string | undefined = games.find(
           (g) =>
@@ -182,16 +187,42 @@ io.on("connection", (socket: Socket) => {
 
         if (gameId) {
           if (playerState === "explainer") {
-            if (movie && !message && !guessId) {
+            if (movie && message && guessId) {
+              const playerGuessedId = games
+                .find((g) => g.id === gameId)
+                ?.guesses.find((g) => g.id === guessId)?.playerId;
               games = games.map((g) =>
-                g.id === gameId ? { ...g, currentMovie: movie } : g
+                g.id === gameId
+                  ? {
+                      ...g,
+                      guesses: g.guesses.map((guess) =>
+                        guess.id === guessId
+                          ? { ...guess, state: message }
+                          : guess
+                      ),
+                      players: g.players.map((p) =>
+                        p.id === playerGuessedId
+                          ? { ...p, score: p.score + 1 }
+                          : p
+                      ),
+                      currentMovie: movie,
+                    }
+                  : g
               );
-              console.log(games);
-            } else if (message && !guessId) {
+            } else if (movie && !message && !guessId) {
+              games = games.map((g) =>
+                g.id === gameId
+                  ? {
+                      ...g,
+                      currentMovie: movie,
+                    }
+                  : g
+              );
+            } else if (!movie && message && !guessId) {
               games = games.map((g) =>
                 g.id === gameId ? { ...g, clues: [...g.clues, message] } : g
               );
-            } else if (message && guessId) {
+            } else if (!movie && message && guessId) {
               games = games.map((g) =>
                 g.id === gameId
                   ? {
@@ -204,6 +235,89 @@ io.on("connection", (socket: Socket) => {
                     }
                   : g
               );
+            } else if (!movie && !message && !guessId && next) {
+              const indexOfThisPlayer = games
+                .find((g) => g.id === gameId)
+                ?.players.findIndex((p) => p.id === playerId);
+
+              const playersLength = games.find((g) => g.id === gameId)?.players
+                .length;
+
+              const rounds = games.find((g) => g.id === gameId)?.rounds;
+
+              if (
+                playersLength !== undefined &&
+                indexOfThisPlayer !== playersLength - 1
+              ) {
+                let playersArr: Player[] =
+                  games.find((g) => g.id)?.players || [];
+
+                playersArr[
+                  indexOfThisPlayer !== undefined ? indexOfThisPlayer : -1
+                ] = {
+                  ...playersArr[
+                    indexOfThisPlayer !== undefined ? indexOfThisPlayer : -1
+                  ],
+                  state: "guesser",
+                };
+                playersArr[
+                  indexOfThisPlayer !== undefined ? indexOfThisPlayer + 1 : -1
+                ] = {
+                  ...playersArr[
+                    indexOfThisPlayer !== undefined ? indexOfThisPlayer + 1 : -1
+                  ],
+                  state: "explainer",
+                };
+
+                games = games.map((game) =>
+                  game.id === gameId
+                    ? {
+                        ...game,
+                        players: playersArr,
+                        clues: [],
+                        guesses: [],
+                        currentMovie: null,
+                      }
+                    : game
+                );
+              } else if (
+                playersLength !== undefined &&
+                indexOfThisPlayer === playersLength - 1
+              ) {
+                if (rounds === 1) {
+                  games = games.map((g) =>
+                    g.id === gameId ? { ...g, state: "ended" } : g
+                  );
+                } else if (rounds !== undefined && rounds > 1) {
+                  let playersArr: Player[] =
+                    games.find((g) => g.id)?.players || [];
+                  playersArr[
+                    indexOfThisPlayer !== undefined ? indexOfThisPlayer : -1
+                  ] = {
+                    ...playersArr[
+                      indexOfThisPlayer !== undefined ? indexOfThisPlayer : -1
+                    ],
+                    state: "guesser",
+                  };
+                  playersArr[0] = {
+                    ...playersArr[0],
+                    state: "explainer",
+                  };
+
+                  games = games.map((game) =>
+                    game.id === gameId
+                      ? {
+                          ...game,
+                          rounds: rounds !== undefined ? rounds - 1 : 0,
+                          players: playersArr,
+                          clues: [],
+                          guesses: [],
+                          currentMovie: null,
+                        }
+                      : game
+                  );
+                }
+              }
             }
           } else if (playerState === "guesser") {
             if (message) {

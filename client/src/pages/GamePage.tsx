@@ -20,16 +20,6 @@ export const GamePage = () => {
     "explainer";
 
   useEffect(() => {
-    socket.emit("game-playerId", thisPlayerId);
-    socket.on("game", (gameFromServer: Game) => {
-      setGame(gameFromServer);
-      if (gameFromServer.state === "ended") {
-        navigate("/");
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     const getMovies = async () => {
       try {
         const response = await axios.get(
@@ -52,8 +42,20 @@ export const GamePage = () => {
         console.error(error);
       }
     };
-    getMovies();
+    socket.emit("game-playerId", thisPlayerId);
+    socket.on("game", (gameFromServer: Game) => {
+      setGame(gameFromServer);
+      console.log(gameFromServer);
+      if (!gameFromServer.currentMovie) {
+        getMovies();
+      }
+      console.log(movies);
+      if (gameFromServer.state === "ended") {
+        navigate("/");
+      }
+    });
   }, []);
+
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     socket.emit("game-playerId", thisPlayerId, "", message);
@@ -90,14 +92,18 @@ export const GamePage = () => {
         </div>
       ))}
       <MoviesWrapper>
-        {explainer
-          ? movies &&
-            movies.map((movie) => (
+        {explainer && movies
+          ? movies.map((movie) => (
               <div>
                 <MovieCard movie={movie} />{" "}
                 {movies.length > 1 && (
                   <button
                     onClick={() => {
+                      socket.emit(
+                        "game-playerId",
+                        thisPlayerId,
+                        movies.filter((m) => m.id === movie.id)
+                      );
                       setMovies(movies.filter((m) => m.id === movie.id));
                     }}
                   >
@@ -125,11 +131,10 @@ export const GamePage = () => {
                 <div>
                   <button
                     onClick={() => {
-                      socket.emit("game-playerId", thisPlayerId, movies[0]);
                       socket.emit(
                         "game-playerId",
                         thisPlayerId,
-                        "",
+                        movies[0],
                         "green",
                         g.id
                       );
@@ -169,6 +174,15 @@ export const GamePage = () => {
           </div>
         ))}
       </div>
+      {explainer && game.guesses.find((g) => g.state === "green") && (
+        <button
+          onClick={() =>
+            socket.emit("game-playerId", thisPlayerId, "", "", "", true)
+          }
+        >
+          Continue
+        </button>
+      )}
     </div>
   );
 };
