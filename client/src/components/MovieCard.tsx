@@ -11,6 +11,6 @@ export const MovieCard = ({ movie }: { movie: Movie }) => {
 };
 
 const MovieImage = styled.img`
-  max-height: 17vw;
-  max-width: 17vw;
+  max-height: 10vw;
+  max-width: 10vw;
 `;

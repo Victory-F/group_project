@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Game, Reply } from "../../../types/gameTypes";
 import { socket } from "../socket/socket";
 import { useNavigate } from "react-router-dom";
+import { PlayerCard } from "../components";
 
 export const LobbyPage = () => {
   const [game, setGame] = useState<Game | null>(null);
@@ -31,10 +32,7 @@ export const LobbyPage = () => {
       <h2>Code: {game?.id}</h2>
 
       {game?.players.map((p) => (
-        <div>
-          {" "}
-          <div>{p.name}</div>
-        </div>
+        <PlayerCard player={p} />
       ))}
       <h3>Rounds: {game?.rounds}</h3>
       {game?.players.find((player) => player.id === thisPlayerId)?.state ===
