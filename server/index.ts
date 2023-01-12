@@ -344,23 +344,6 @@ io.on("connection", (socket: Socket) => {
       }
     }
   );
-
-  //end game
-  socket.on("end-game", (playerId: string) => {
-    try {
-      const game: Game | undefined = games.find(
-        (g) => g.players.find((p) => p.id === playerId) && g.state === "ended"
-      );
-      if (game) {
-        const sortedPlayersByScore = game.players.sort(function (a, b) {
-          return b.score - a.score;
-        });
-        socket.emit("game-result", { ...game, players: sortedPlayersByScore });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  });
 });
 
 server.listen(PORT, () => {
