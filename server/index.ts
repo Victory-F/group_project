@@ -285,7 +285,13 @@ io.on("connection", (socket: Socket) => {
               ) {
                 if (rounds === 1) {
                   games = games.map((g) =>
-                    g.id === gameId ? { ...g, state: "ended" } : g
+                    g.id === gameId
+                      ? {
+                          ...g,
+                          players: g.players.sort((a, b) => b.score - a.score),
+                          state: "ended",
+                        }
+                      : g
                   );
                 } else if (rounds !== undefined && rounds > 1) {
                   let playersArr: Player[] =
