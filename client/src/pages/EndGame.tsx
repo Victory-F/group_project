@@ -8,8 +8,8 @@ export const EndGame = () => {
   const playerId = socket.id;
   const navigate = useNavigate();
   useEffect(() => {
-    socket.emit("end-game", playerId);
-    socket.on("game-result", (gameFromServer: Game) => {
+    socket.emit("game-playerId", playerId);
+    socket.on("game", (gameFromServer: Game) => {
       setGame(gameFromServer);
     });
   }, []);
