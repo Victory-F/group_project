@@ -142,27 +142,25 @@ export const GamePage = () => {
 
         {/* Movies */}
         <MoviesWrapper>
-          {explainer && movies && movies.length > 1 ? (
-            movies.map((movie) => (
-              <MovieCard
-                movie={movie}
-                onClick={() => {
-                  socket.emit(
-                    "game-playerId",
-                    thisPlayerId,
-                    movies.filter((m) => m.id === movie.id)
-                  );
-                  setMovies(movies.filter((m) => m.id === movie.id));
-                }}
-              />
-            ))
-          ) : explainer ? (
-            <MovieCard movie={movies[0]} />
-          ) : (
-            game &&
-            game.guesses.find((g) => g.state === "green") &&
-            game.currentMovie && <MovieCard movie={game.currentMovie} />
-          )}
+          {explainer && movies && movies.length > 1
+            ? movies.map((movie) => (
+                <MovieCard
+                  movie={movie}
+                  onClick={() => {
+                    socket.emit(
+                      "game-playerId",
+                      thisPlayerId,
+                      movies.filter((m) => m.id === movie.id)
+                    );
+                    setMovies(movies.filter((m) => m.id === movie.id));
+                  }}
+                />
+              ))
+            : explainer
+            ? movies[0] && <MovieCard movie={movies[0]} />
+            : game &&
+              game.guesses.find((g) => g.state === "green") &&
+              game.currentMovie && <MovieCard movie={game.currentMovie} />}
 
           {/* Clue */}
           <div>
