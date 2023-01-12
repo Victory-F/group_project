@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import "./HomePage.css";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import sample from "./home.mp4";
+import styled from "styled-components";
+import { Button, ButtonSpan, Text } from "../styled";
 export const HomePage = () => {
   const navigate = useNavigate();
   const navigateCreate = () => {
@@ -12,23 +10,44 @@ export const HomePage = () => {
     navigate("/join");
   };
   return (
-    <div className="home">
-      <video loop autoPlay muted className="video" src={sample} />
-      <div className="text">
+    <HomeWrapper>
+      <Video loop autoPlay muted>
+        <source src="home.mp4" type="home/mp4" />
+      </Video>
+      <Text>
         <h1> Guess The Emoji</h1>
-        <button onClick={navigateCreate}>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>Create
-        </button>
-        <button onClick={navigateJoin}>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>Join
-        </button>{" "}
-      </div>
-    </div>
+        <Button onClick={navigateCreate}>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>Create
+        </Button>
+        <Button onClick={navigateJoin}>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>Join
+        </Button>
+      </Text>
+    </HomeWrapper>
   );
 };
+const Video = styled.video`
+  opacity: 0.4;
+  position: relative;
+  z-index: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+`;
+const HomeWrapper = styled.div`
+  display: flex;
+  position: absolute;
+  background-color: black;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+`;

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { JoinGameInit, Reply } from "../../../types/gameTypes";
-import "./CreateGame.css";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket/socket";
+import { Button, ButtonSpan, FormWrapper, Header, Input } from "../styled";
+
 export const JoinGame = () => {
   const [joinGameInit, setJoinGameInit] = useState<JoinGameInit>({
     player: { name: "", imgUrl: "" },
@@ -23,10 +24,10 @@ export const JoinGame = () => {
     console.log(joinGameInit, "this is join game init");
   };
   return (
-    <div className="formCreate">
-      <h1 className="headerA"> Join Game</h1>
-      <form onSubmit={submitForm} className="form">
-        <input
+    <FormWrapper>
+      <Header> Join Game</Header>
+      <form onSubmit={submitForm}>
+        <Input
           placeholder="Name"
           value={joinGameInit.player.name}
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ export const JoinGame = () => {
           maxLength={15}
           required
         />
-        <input
+        <Input
           placeholder="Image Url"
           value={joinGameInit.player.imgUrl}
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
@@ -52,7 +53,7 @@ export const JoinGame = () => {
           }}
           required
         />
-        <input
+        <Input
           type="text"
           placeholder="Room Code"
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
@@ -63,13 +64,13 @@ export const JoinGame = () => {
           }}
           required
         />
-        <button type="submit" className="b">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span> Join
-        </button>
+        <Button type="submit">
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan> Join
+        </Button>
       </form>
-    </div>
+    </FormWrapper>
   );
 };
