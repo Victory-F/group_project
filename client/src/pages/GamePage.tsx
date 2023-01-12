@@ -56,7 +56,7 @@ export const GamePage = () => {
       }
     });
   }, []);
-
+  console.log(game?.currentMovie);
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     socket.emit("game-playerId", thisPlayerId, "", message);
@@ -142,22 +142,27 @@ export const GamePage = () => {
 
         {/* Movies */}
         <MoviesWrapper>
-          {explainer && movies
-            ? movies.map((movie) => (
-                <MovieCard
-                  movie={movie}
-                  onClick={() => {
-                    socket.emit(
-                      "game-playerId",
-                      thisPlayerId,
-                      movies.filter((m) => m.id === movie.id)
-                    );
-                    setMovies(movies.filter((m) => m.id === movie.id));
-                  }}
-                />
-              ))
-            : game &&
-              game.currentMovie && <MovieCard movie={game.currentMovie} />}
+          {explainer && movies && movies.length > 1 ? (
+            movies.map((movie) => (
+              <MovieCard
+                movie={movie}
+                onClick={() => {
+                  socket.emit(
+                    "game-playerId",
+                    thisPlayerId,
+                    movies.filter((m) => m.id === movie.id)
+                  );
+                  setMovies(movies.filter((m) => m.id === movie.id));
+                }}
+              />
+            ))
+          ) : explainer ? (
+            <MovieCard movie={movies[0]} />
+          ) : (
+            game &&
+            game.guesses.find((g) => g.state === "green") &&
+            game.currentMovie && <MovieCard movie={game.currentMovie} />
+          )}
 
           {/* Clue */}
           <div>

@@ -8,7 +8,7 @@ export const MovieCard = ({
   movie: Movie;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) => {
-  console.log(onClick ? true : false);
+  console.log(movie);
   return (
     <CardWrapper>
       <MovieName>{movie.name}</MovieName>
@@ -22,8 +22,8 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  max-width: 15vw;
-  max-height: 15vw;
+  width: 15vw;
+  height: 15vw;
   border: solid black;
 `;
 
