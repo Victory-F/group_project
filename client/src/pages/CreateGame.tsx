@@ -2,6 +2,9 @@ import { useState } from "react";
 import { CreateGameInit, Reply } from "../../../types/gameTypes";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket/socket";
+
+import { Button, ButtonSpan, FormWrapper, Header, Input } from "../styled";
+
 export const CreateGame = () => {
   const [createGameInit, setCreateGameInit] = useState<CreateGameInit>({
     player: { name: "", imgUrl: "" },
@@ -20,10 +23,10 @@ export const CreateGame = () => {
     });
   };
   return (
-    <div>
-      <h1> Create game page</h1>
+    <FormWrapper>
+      <Header> Create Game</Header>
       <form onSubmit={submitForm}>
-        <input
+        <Input
           placeholder="Name"
           value={createGameInit.player.name}
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
@@ -35,7 +38,7 @@ export const CreateGame = () => {
           maxLength={15}
           required
         />
-        <input
+        <Input
           placeholder="Image Url"
           value={createGameInit.player.imgUrl}
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
@@ -49,7 +52,7 @@ export const CreateGame = () => {
           }}
           required
         />
-        <input
+        <Input
           type="number"
           min="1"
           max="10"
@@ -62,8 +65,13 @@ export const CreateGame = () => {
           }}
           required
         />
-        <button type="submit">Create</button>
+        <Button type="submit">
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>
+          <ButtonSpan></ButtonSpan>Create
+        </Button>
       </form>
-    </div>
+    </FormWrapper>
   );
 };
