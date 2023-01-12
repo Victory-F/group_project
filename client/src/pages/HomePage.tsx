@@ -12,7 +12,7 @@ export const HomePage = () => {
   return (
     <HomeWrapper>
       <Video loop autoPlay muted>
-        <source src="home.mp4" type="home/mp4" />
+        <source src="home.mp4" type="video/mp4" />
       </Video>
       <Text>
         <h1> Guess The Emoji</h1>
