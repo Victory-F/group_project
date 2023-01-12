@@ -1,6 +1,14 @@
 import "./App.css";
+import { socket } from "./socket/socket";
+import {
+  HomePage,
+  CreateGame,
+  JoinGame,
+  LobbyPage,
+  GamePage,
+  EndGame,
+} from "./pages";
 
-import { HomePage, CreateGame, JoinGame, LobbyPage, GamePage } from "./pages";
 import { Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -10,6 +18,7 @@ function App() {
       <Route path="/join" element={<JoinGame />} />
       <Route path="/Lobby" element={<LobbyPage />} />
       <Route path="/game" element={<GamePage />} />
+      <Route path="/end" element={<EndGame />} />
     </Routes>
   );
 }

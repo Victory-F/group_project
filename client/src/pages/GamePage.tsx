@@ -51,7 +51,7 @@ export const GamePage = () => {
       }
 
       if (gameFromServer.state === "ended") {
-        navigate("/");
+        navigate("/end");
       }
     });
   }, []);
