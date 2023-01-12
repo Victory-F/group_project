@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CreateGameInit, Reply } from "../../../types/gameTypes";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket/socket";
+import "./CreateGame.css";
 export const CreateGame = () => {
   const [createGameInit, setCreateGameInit] = useState<CreateGameInit>({
     player: { name: "", imgUrl: "" },
@@ -20,9 +21,9 @@ export const CreateGame = () => {
     });
   };
   return (
-    <div>
-      <h1> Create game page</h1>
-      <form onSubmit={submitForm}>
+    <div className="formCreate">
+      <h1 className="headerA"> Create Game</h1>
+      <form onSubmit={submitForm} className="form">
         <input
           placeholder="Name"
           value={createGameInit.player.name}
@@ -62,7 +63,12 @@ export const CreateGame = () => {
           }}
           required
         />
-        <button type="submit">Create</button>
+        <button type="submit" className="b">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>Create
+        </button>
       </form>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { JoinGameInit, Reply } from "../../../types/gameTypes";
+import "./CreateGame.css";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../socket/socket";
 export const JoinGame = () => {
@@ -22,9 +23,9 @@ export const JoinGame = () => {
     console.log(joinGameInit, "this is join game init");
   };
   return (
-    <div>
-      <h1> Join game page</h1>
-      <form onSubmit={submitForm}>
+    <div className="formCreate">
+      <h1 className="headerA"> Join Game</h1>
+      <form onSubmit={submitForm} className="form">
         <input
           placeholder="Name"
           value={joinGameInit.player.name}
@@ -62,7 +63,12 @@ export const JoinGame = () => {
           }}
           required
         />
-        <button type="submit">Join</button>
+        <button type="submit" className="b">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span> Join
+        </button>
       </form>
     </div>
   );
