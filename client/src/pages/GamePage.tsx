@@ -62,10 +62,10 @@ export const GamePage = () => {
     socket.emit("game-playerId", thisPlayerId, "", message);
     setMessage("");
   };
-  console.log(game);
+
   return (
     <GamePageWrapper>
-      {(movies.length === 1 || (game && game?.clues.length > 0)) && (
+      {movies.length === 1 || (game && game?.clues.length > 0) ? (
         <form onSubmit={submitForm}>
           <input
             placeholder={
@@ -81,6 +81,10 @@ export const GamePage = () => {
           />
           <button type="submit"> send</button>
         </form>
+      ) : explainer ? (
+        <p>Choose a Movie To Explain</p>
+      ) : (
+        <p>Wait For The Clue</p>
       )}
       <GameWrapper>
         <GuessesWrapper>

@@ -15,7 +15,7 @@ export const HomePage = () => {
         <source src="home.mp4" type="video/mp4" />
       </Video>
       <Text>
-        <h1> Guess The Emoji</h1>
+        <h1>MoviEmoji</h1>
         <Button onClick={navigateCreate}>
           <ButtonSpan></ButtonSpan>
           <ButtonSpan></ButtonSpan>

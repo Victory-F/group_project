@@ -11,7 +11,6 @@ export const EndGame = () => {
     socket.emit("game-playerId", playerId);
     socket.on("game", (gameFromServer: Game) => {
       setGame(gameFromServer);
-      console.log(gameFromServer);
     });
   }, []);
 
