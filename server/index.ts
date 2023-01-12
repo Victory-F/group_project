@@ -172,8 +172,7 @@ io.on("connection", (socket: Socket) => {
     ) => {
       try {
         let gameId: string | undefined = games.find(
-          (g) =>
-            g.players.find((p) => p.id === playerId) && g.state === "running"
+          (g) => g.players.find((p) => p.id === playerId) && g.state !== "lobby"
         )?.id;
         let playerState = games
           .find((game) => game.id === gameId)

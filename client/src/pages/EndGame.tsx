@@ -11,8 +11,10 @@ export const EndGame = () => {
     socket.emit("game-playerId", playerId);
     socket.on("game", (gameFromServer: Game) => {
       setGame(gameFromServer);
+      console.log(gameFromServer);
     });
   }, []);
+
   return (
     <div>
       <h1> this is end page</h1>

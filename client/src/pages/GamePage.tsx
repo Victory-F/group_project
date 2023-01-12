@@ -1,4 +1,5 @@
 import axios from "axios";
+import cluster from "cluster";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -64,69 +65,72 @@ export const GamePage = () => {
   console.log(game);
   return (
     <GamePageWrapper>
-      <form onSubmit={submitForm}>
-        <input
-          placeholder={
-            game?.players.find((player) => player.id === thisPlayerId)
-              ?.state === "explainer"
-              ? "Type Your Clue"
-              : "Type Your Guess"
-          }
-          value={message}
-          onChange={(e: React.FormEvent<HTMLInputElement>) =>
-            setMessage(e.currentTarget.value)
-          }
-        />
-        <button type="submit"> send</button>
-      </form>
+      {(movies.length === 1 || (game && game?.clues.length > 0)) && (
+        <form onSubmit={submitForm}>
+          <input
+            placeholder={
+              game?.players.find((player) => player.id === thisPlayerId)
+                ?.state === "explainer"
+                ? "Type Your Clue"
+                : "Type Your Guess"
+            }
+            value={message}
+            onChange={(e: React.FormEvent<HTMLInputElement>) =>
+              setMessage(e.currentTarget.value)
+            }
+          />
+          <button type="submit"> send</button>
+        </form>
+      )}
       <GameWrapper>
         <GuessesWrapper>
           {game?.guesses.map((g) => (
             <GuessCard guess={g}>
               <div>
-                {explainer && (
-                  <div>
-                    <button
-                      onClick={() => {
-                        socket.emit(
-                          "game-playerId",
-                          thisPlayerId,
-                          movies[0],
-                          "green",
-                          g.id
-                        );
-                      }}
-                    >
-                      True!
-                    </button>
-                    <button
-                      onClick={() =>
-                        socket.emit(
-                          "game-playerId",
-                          thisPlayerId,
-                          "",
-                          "yellow",
-                          g.id
-                        )
-                      }
-                    >
-                      Warm
-                    </button>
-                    <button
-                      onClick={() =>
-                        socket.emit(
-                          "game-playerId",
-                          thisPlayerId,
-                          "",
-                          "red",
-                          g.id
-                        )
-                      }
-                    >
-                      Cold
-                    </button>
-                  </div>
-                )}
+                {explainer &&
+                  !game.guesses.find((g) => g.state === "green") && (
+                    <div>
+                      <button
+                        onClick={() => {
+                          socket.emit(
+                            "game-playerId",
+                            thisPlayerId,
+                            movies[0],
+                            "green",
+                            g.id
+                          );
+                        }}
+                      >
+                        True!
+                      </button>
+                      <button
+                        onClick={() =>
+                          socket.emit(
+                            "game-playerId",
+                            thisPlayerId,
+                            "",
+                            "yellow",
+                            g.id
+                          )
+                        }
+                      >
+                        Warm
+                      </button>
+                      <button
+                        onClick={() =>
+                          socket.emit(
+                            "game-playerId",
+                            thisPlayerId,
+                            "",
+                            "red",
+                            g.id
+                          )
+                        }
+                      >
+                        Cold
+                      </button>
+                    </div>
+                  )}
               </div>
             </GuessCard>
           ))}
