@@ -9,7 +9,6 @@ type Game = {
   guesses: Guess[];
   currentMovie?: Movie | null;
 };
-
 type Player = {
   id: string;
   name: string;
