@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Game, Movie } from "../../../types/gameTypes";
-import { MovieCard } from "../components";
+import { GuessCard, MovieCard, PlayerCard } from "../components";
 import { socket } from "../socket/socket";
 
 export const GamePage = () => {
@@ -14,7 +14,7 @@ export const GamePage = () => {
   const [message, setMessage] = useState<string>("");
 
   const thisPlayerId = socket.id;
-
+  console.log(thisPlayerId);
   const explainer =
     game?.players.find((player) => player.id === thisPlayerId)?.state ===
     "explainer";
@@ -45,11 +45,11 @@ export const GamePage = () => {
     socket.emit("game-playerId", thisPlayerId);
     socket.on("game", (gameFromServer: Game) => {
       setGame(gameFromServer);
-      console.log(gameFromServer);
+
       if (!gameFromServer.currentMovie) {
         getMovies();
       }
-      console.log(movies);
+
       if (gameFromServer.state === "ended") {
         navigate("/end");
       }
@@ -61,12 +61,9 @@ export const GamePage = () => {
     socket.emit("game-playerId", thisPlayerId, "", message);
     setMessage("");
   };
-
+  console.log(game);
   return (
-    <div>
-      <h2> this is the game page </h2>
-      <h2>Code: {game?.id}</h2>
-
+    <GamePageWrapper>
       <form onSubmit={submitForm}>
         <input
           placeholder={
@@ -80,100 +77,96 @@ export const GamePage = () => {
             setMessage(e.currentTarget.value)
           }
         />
-        <button type="submit"> send the emojies</button>
+        <button type="submit"> send</button>
       </form>
-
-      {game?.players.map((p) => (
-        <div>
-          {" "}
-          <div>name:{p.name}</div>
-          <div> score: {p.score} </div>
-          <div>state: {p.state} </div>
-        </div>
-      ))}
-      <MoviesWrapper>
-        {explainer && movies
-          ? movies.map((movie) => (
+      <GameWrapper>
+        <GuessesWrapper>
+          {game?.guesses.map((g) => (
+            <GuessCard guess={g}>
               <div>
-                <MovieCard movie={movie} />{" "}
-                {movies.length > 1 && (
-                  <button
-                    onClick={() => {
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        movies.filter((m) => m.id === movie.id)
-                      );
-                      setMovies(movies.filter((m) => m.id === movie.id));
-                    }}
-                  >
-                    choose
-                  </button>
+                {explainer && (
+                  <div>
+                    <button
+                      onClick={() => {
+                        socket.emit(
+                          "game-playerId",
+                          thisPlayerId,
+                          movies[0],
+                          "green",
+                          g.id
+                        );
+                      }}
+                    >
+                      True!
+                    </button>
+                    <button
+                      onClick={() =>
+                        socket.emit(
+                          "game-playerId",
+                          thisPlayerId,
+                          "",
+                          "yellow",
+                          g.id
+                        )
+                      }
+                    >
+                      Warm
+                    </button>
+                    <button
+                      onClick={() =>
+                        socket.emit(
+                          "game-playerId",
+                          thisPlayerId,
+                          "",
+                          "red",
+                          g.id
+                        )
+                      }
+                    >
+                      Cold
+                    </button>
+                  </div>
                 )}
               </div>
-            ))
-          : game &&
-            game.currentMovie && <MovieCard movie={game.currentMovie} />}
-      </MoviesWrapper>
-      <div>
-        {game?.clues.map((c) => (
-          <p>Clue: {c}</p>
-        ))}
-      </div>
-      <div>
-        {game?.guesses.map((g) => (
-          <div>
-            <p>player name : {g.playerName}</p>
-            <p> guess: {g.text}</p>
-            <p>State: {g.state}</p>
-            <div>
-              {explainer && (
+            </GuessCard>
+          ))}
+        </GuessesWrapper>
+        <MoviesWrapper>
+          {explainer && movies
+            ? movies.map((movie) => (
                 <div>
-                  <button
-                    onClick={() => {
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        movies[0],
-                        "green",
-                        g.id
-                      );
-                    }}
-                  >
-                    True!
-                  </button>
-                  <button
-                    onClick={() =>
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        "",
-                        "yellow",
-                        g.id
-                      )
-                    }
-                  >
-                    Warm
-                  </button>
-                  <button
-                    onClick={() =>
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        "",
-                        "red",
-                        g.id
-                      )
-                    }
-                  >
-                    Cold
-                  </button>
+                  <MovieCard movie={movie} />{" "}
+                  {movies.length > 1 && (
+                    <button
+                      onClick={() => {
+                        socket.emit(
+                          "game-playerId",
+                          thisPlayerId,
+                          movies.filter((m) => m.id === movie.id)
+                        );
+                        setMovies(movies.filter((m) => m.id === movie.id));
+                      }}
+                    >
+                      choose
+                    </button>
+                  )}
                 </div>
-              )}
-            </div>
+              ))
+            : game &&
+              game.currentMovie && <MovieCard movie={game.currentMovie} />}
+          <div>
+            {game?.clues.map((c) => (
+              <p>Clue: {c}</p>
+            ))}
           </div>
-        ))}
-      </div>
+        </MoviesWrapper>
+
+        <PlayersWrapper>
+          {game?.players.map((p) => (
+            <PlayerCard player={p} />
+          ))}
+        </PlayersWrapper>
+      </GameWrapper>
       {explainer && game.guesses.find((g) => g.state === "green") && (
         <button
           onClick={() =>
@@ -183,7 +176,7 @@ export const GamePage = () => {
           Continue
         </button>
       )}
-    </div>
+    </GamePageWrapper>
   );
 };
 
@@ -191,4 +184,27 @@ const MoviesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 5vw;
+  width: 60vw;
+`;
+
+const GameWrapper = styled.div`
+  display: flex;
+  gap: 5vw;
+`;
+const PlayersWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const GuessesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const GamePageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3vw;
+  height: 99vh;
+  width: 99vw;
+  padding: 1vw;
 `;

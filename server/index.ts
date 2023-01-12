@@ -171,16 +171,15 @@ io.on("connection", (socket: Socket) => {
       next: boolean
     ) => {
       try {
-        const gameId: string | undefined = games.find(
+        let gameId: string | undefined = games.find(
           (g) =>
             g.players.find((p) => p.id === playerId) && g.state === "running"
         )?.id;
-
-        const playerState = games
+        let playerState = games
           .find((game) => game.id === gameId)
           ?.players.find((player) => player.id === playerId)?.state;
 
-        const playerName =
+        let playerName =
           games
             .find((game) => game.id === gameId)
             ?.players.find((player) => player.id === playerId)?.name || "";
@@ -188,7 +187,7 @@ io.on("connection", (socket: Socket) => {
         if (gameId) {
           if (playerState === "explainer") {
             if (movie && message && guessId) {
-              const playerGuessedId = games
+              let playerGuessedId = games
                 .find((g) => g.id === gameId)
                 ?.guesses.find((g) => g.id === guessId)?.playerId;
               games = games.map((g) =>
@@ -236,21 +235,21 @@ io.on("connection", (socket: Socket) => {
                   : g
               );
             } else if (!movie && !message && !guessId && next) {
-              const indexOfThisPlayer = games
+              let indexOfThisPlayer = games
                 .find((g) => g.id === gameId)
                 ?.players.findIndex((p) => p.id === playerId);
 
-              const playersLength = games.find((g) => g.id === gameId)?.players
+              let playersLength = games.find((g) => g.id === gameId)?.players
                 .length;
 
-              const rounds = games.find((g) => g.id === gameId)?.rounds;
+              let rounds = games.find((g) => g.id === gameId)?.rounds;
 
               if (
                 playersLength !== undefined &&
                 indexOfThisPlayer !== playersLength - 1
               ) {
                 let playersArr: Player[] =
-                  games.find((g) => g.id)?.players || [];
+                  games.find((g) => g.id === gameId)?.players || [];
 
                 playersArr[
                   indexOfThisPlayer !== undefined ? indexOfThisPlayer : -1
@@ -290,7 +289,7 @@ io.on("connection", (socket: Socket) => {
                   );
                 } else if (rounds !== undefined && rounds > 1) {
                   let playersArr: Player[] =
-                    games.find((g) => g.id)?.players || [];
+                    games.find((g) => g.id === gameId)?.players || [];
                   playersArr[
                     indexOfThisPlayer !== undefined ? indexOfThisPlayer : -1
                   ] = {
@@ -321,7 +320,7 @@ io.on("connection", (socket: Socket) => {
             }
           } else if (playerState === "guesser") {
             if (message) {
-              const guess: Guess = {
+              let guess: Guess = {
                 id: Math.random().toString().slice(2, 8),
                 playerId: playerId,
                 playerName: playerName,

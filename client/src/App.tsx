@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import "./App.css";
 import { socket } from "./socket/socket";
 import {
@@ -9,16 +8,9 @@ import {
   GamePage,
   EndGame,
 } from "./pages";
+
 import { Routes, Route } from "react-router-dom";
 function App() {
-  useEffect(() => {
-    socket.on("message", (message) => {
-      console.log(message);
-    });
-    socket.emit("message from mahtab", "hello from client");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />

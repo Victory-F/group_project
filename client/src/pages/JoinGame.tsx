@@ -18,8 +18,6 @@ export const JoinGame = () => {
         navigate("/lobby");
       }
     });
-
-    console.log(joinGameInit, "this is join game init");
   };
   return (
     <div>
