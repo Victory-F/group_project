@@ -15,7 +15,7 @@ export const GamePage = () => {
   const [message, setMessage] = useState<string>("");
 
   const thisPlayerId = socket.id;
-  console.log(thisPlayerId);
+
   const explainer =
     game?.players.find((player) => player.id === thisPlayerId)?.state ===
     "explainer";
@@ -139,36 +139,34 @@ export const GamePage = () => {
             </GuessCard>
           ))}
         </GuessesWrapper>
+
+        {/* Movies */}
         <MoviesWrapper>
           {explainer && movies
             ? movies.map((movie) => (
-                <div>
-                  <MovieCard movie={movie} />{" "}
-                  {movies.length > 1 && (
-                    <button
-                      onClick={() => {
-                        socket.emit(
-                          "game-playerId",
-                          thisPlayerId,
-                          movies.filter((m) => m.id === movie.id)
-                        );
-                        setMovies(movies.filter((m) => m.id === movie.id));
-                      }}
-                    >
-                      choose
-                    </button>
-                  )}
-                </div>
+                <MovieCard
+                  movie={movie}
+                  onClick={() => {
+                    socket.emit(
+                      "game-playerId",
+                      thisPlayerId,
+                      movies.filter((m) => m.id === movie.id)
+                    );
+                    setMovies(movies.filter((m) => m.id === movie.id));
+                  }}
+                />
               ))
             : game &&
               game.currentMovie && <MovieCard movie={game.currentMovie} />}
+
+          {/* Clue */}
           <div>
             {game?.clues.map((c) => (
               <p>Clue: {c}</p>
             ))}
           </div>
         </MoviesWrapper>
-
+        {/* PLAYERS */}
         <PlayersWrapper>
           {game?.players.map((p) => (
             <PlayerCard player={p} />
