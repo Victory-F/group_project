@@ -90,7 +90,7 @@ export const GamePage = () => {
           <GuessCard guess={g}>
             <div>
               {explainer && !game.guesses.find((g) => g.state === "green") && (
-                <Div>
+                <ButtonsWrapper>
                   <StateButton
                     title="Yaaay well done!"
                     style={{ display: "block" }}
@@ -136,7 +136,7 @@ export const GamePage = () => {
                   >
                     🥶
                   </StateButton>
-                </Div>
+                </ButtonsWrapper>
               )}
             </div>
           </GuessCard>
@@ -256,8 +256,9 @@ const GamePageWrapper = styled.div`
   text-align: center;
   font-family: Georgia, "Times New Roman", Times, serif;
 `;
-const Div = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
 `;
 

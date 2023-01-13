@@ -11,15 +11,16 @@ export const GuessCard = ({
 }) => {
   return (
     <GuessWrapper>
-      <PlayerName>{guess.playerName}:</PlayerName>
-      <PlayerMessage>{guess.text}</PlayerMessage>
       <PlayerMessage>
         {guess.state === "red" ? <p>🥶️</p> : null}
         {guess.state === "white" ? <p>❓️</p> : null}
         {guess.state === "green" ? <p>🤩️</p> : null}
         {guess.state === "yellow" ? <p>🥵️</p> : null}
       </PlayerMessage>
-
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <PlayerName>{guess.playerName}:</PlayerName>
+        <PlayerMessage>{guess.text}</PlayerMessage>
+      </div>
       {children}
     </GuessWrapper>
   );
@@ -27,10 +28,13 @@ export const GuessCard = ({
 
 const GuessWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.4);
+  display: flex;
   justify-content: space-around;
-  background: hsla(34, 100%, 19%, 0.5);
-  margin: 4px;
+  margin: 5px;
   flex-wrap: wrap;
   min-width: content;
 `;
