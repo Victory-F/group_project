@@ -25,11 +25,10 @@ const PlayerWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   width: 18vw;
-  margin-top: 65px;
-  margin-right: 600px;
+  margin: 5px;
   flex-wrap: wrap;
   min-width: content;
-  margin-left: -120px;
+
   min-height: content;
 `;
 
