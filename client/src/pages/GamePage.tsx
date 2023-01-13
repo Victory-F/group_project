@@ -182,27 +182,39 @@ export const GamePage = () => {
           : (explainer && <p>Choose a Movie To Explain</p>) ||
             (guesser && <p>Wait For The Clue</p>)}
         {/* Movies */}
-        <MoviesWrapper>
-          {explainer && movies && movies.length > 1
-            ? movies.map((movie) => (
-                <MovieCard
-                  movie={movie}
-                  onClick={() => {
-                    socket.emit(
-                      "game-playerId",
-                      thisPlayerId,
-                      movies.filter((m) => m.id === movie.id)
-                    );
-                    setMovies(movies.filter((m) => m.id === movie.id));
-                  }}
-                />
-              ))
-            : explainer
-            ? movies[0] && <MovieCard movie={movies[0]} />
-            : game &&
-              game.guesses.find((g) => g.state === "green") &&
-              game.currentMovie && <MovieCard movie={game.currentMovie} />}
-        </MoviesWrapper>
+
+        {explainer && movies && movies.length > 1 ? (
+          <MoviesWrapper>
+            {movies.map((movie) => (
+              <MovieCard
+                movie={movie}
+                onClick={() => {
+                  socket.emit(
+                    "game-playerId",
+                    thisPlayerId,
+                    movies.filter((m) => m.id === movie.id)
+                  );
+                  setMovies(movies.filter((m) => m.id === movie.id));
+                }}
+              />
+            ))}
+          </MoviesWrapper>
+        ) : explainer ? (
+          movies[0] && (
+            <MovieCardOneWrapper>
+              <MovieCard movie={movies[0]} />
+            </MovieCardOneWrapper>
+          )
+        ) : (
+          game &&
+          game.guesses.find((g) => g.state === "green") &&
+          game.currentMovie && (
+            <MovieCardOneWrapper>
+              <MovieCard movie={game.currentMovie} />
+            </MovieCardOneWrapper>
+          )
+        )}
+
         {/* Clue */}
         <ClueWrapper>
           {game?.clues.map((c) => (
@@ -211,20 +223,23 @@ export const GamePage = () => {
         </ClueWrapper>
         {explainer && game.guesses.find((g) => g.state === "green") && (
           <Button
+            style={{ margin: "7px" }}
             onClick={() =>
               socket.emit("game-playerId", thisPlayerId, "", "", "", true)
             }
           >
-            Continue
+            CONTINUE
           </Button>
         )}
       </GameWrapper>
       {/* PLAYERS */}
-      <PlayersWrapper>
-        {game?.players.map((p) => (
-          <PlayerCard player={p} />
-        ))}
-      </PlayersWrapper>
+      {(movies.length === 1 || guesser) && (
+        <PlayersWrapper>
+          {game?.players.map((p) => (
+            <PlayerCard player={p} />
+          ))}
+        </PlayersWrapper>
+      )}
     </GamePageWrapper>
   );
 };
@@ -254,10 +269,17 @@ const GuessesWrapper = styled.div`
 
 const MoviesWrapper = styled.div`
   position: absolute;
-  top: 10%;
+  top: 8%;
+  left: 5%;
   display: flex;
   flex-wrap: wrap;
-  width: 60%;
+  align-items: center;
+  justify-content: space-around;
+  width: 90%;
+  gap: 10px;
+  background: #8c5233;
+  padding: 10px;
+  border-radius: 10px;
 `;
 
 const GameWrapper = styled.div`
@@ -335,4 +357,10 @@ const Typing = styled.input`
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 10px;
+`;
+
+const MovieCardOneWrapper = styled.div`
+  top: 11%;
+  left: 21%;
+  position: absolute;
 `;

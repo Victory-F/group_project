@@ -12,14 +12,14 @@ export const MovieCard = ({
     <CardWrapper>
       <MovieName>{movie.name}</MovieName>
       <MovieImage src={movie.poster} />
-      {onClick && <BtoChoose onClick={onClick}>choose</BtoChoose>}
+      {onClick && <BtoChoose onClick={onClick}>CHOOSE</BtoChoose>}
     </CardWrapper>
   );
 };
 const BtoChoose = styled.button`
-  font-size: 15px;
+  font-size: 10px;
   width: 55px;
-  margin: auto;
+  margin: 3px;
   background: transparent;
   border: none;
   color: white;
@@ -37,21 +37,22 @@ const CardWrapper = styled.div`
 
   flex-direction: column;
   flex-wrap: wrap;
-  width: 15vw;
-  height: 21vw;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 170px;
+  height: 250px;
   border-radius: 7px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 10px;
+  padding: 5px;
 `;
 
 const MovieName = styled.h1`
   margin: 0;
-  font-size: 1.5vw;
+  font-size: 12px;
 `;
 
 const MovieImage = styled.img`
-  max-height: 13vw;
-  max-width: 13vw;
-  margin: auto;
+  max-height: 160px;
+  max-width: 160px;
 `;
