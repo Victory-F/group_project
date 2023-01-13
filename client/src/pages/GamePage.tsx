@@ -1,11 +1,16 @@
 import axios from "axios";
-import cluster from "cluster";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Game, Movie } from "../../../types/gameTypes";
 import { GuessCard, MovieCard, PlayerCard } from "../components";
 import { socket } from "../socket/socket";
+import EmojiPicker, {
+  EmojiStyle,
+  EmojiClickData,
+  Emoji,
+} from "emoji-picker-react";
+import { Button } from "../styled";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -19,6 +24,10 @@ export const GamePage = () => {
   const explainer =
     game?.players.find((player) => player.id === thisPlayerId)?.state ===
     "explainer";
+
+  const guesser =
+    game?.players.find((player) => player.id === thisPlayerId)?.state ===
+    "guesser";
 
   useEffect(() => {
     const getMovies = async () => {
@@ -56,36 +65,60 @@ export const GamePage = () => {
       }
     });
   }, []);
-  console.log(game?.currentMovie);
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const submitFormExplainer = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    socket.emit("game-playerId", thisPlayerId, "", message);
+    explainer && setEmojiOpen(false);
+    setMessage("");
+  };
+  const submitFormGuesser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     socket.emit("game-playerId", thisPlayerId, "", message);
     setMessage("");
   };
+  const [emojiOpen, setEmojiOpen] = useState<boolean>(false);
+  const onClick = (emojiData: EmojiClickData) => {
+    setMessage(message + emojiData.emoji);
+  };
 
   return (
     <GamePageWrapper>
-      {movies.length === 1 || (game && game?.clues.length > 0) ? (
-        <form onSubmit={submitForm}>
-          <input
-            placeholder={
-              game?.players.find((player) => player.id === thisPlayerId)
-                ?.state === "explainer"
-                ? "Type Your Clue"
-                : "Type Your Guess"
-            }
-            value={message}
-            onChange={(e: React.FormEvent<HTMLInputElement>) =>
-              setMessage(e.currentTarget.value)
-            }
-          />
-          <button type="submit"> send</button>
-        </form>
-      ) : explainer ? (
-        <p>Choose a Movie To Explain</p>
-      ) : (
-        <p>Wait For The Clue</p>
-      )}
+      {movies.length === 1 || (game && game?.clues.length > 0)
+        ? (explainer && (
+            <form onSubmit={submitFormExplainer}>
+              <EmojiInput
+                onClick={() => setEmojiOpen(!emojiOpen)}
+                placeholder="Enter the Emojis"
+                value={message}
+                onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                  setMessage(e.currentTarget.value)
+                }
+              />
+              {emojiOpen && (
+                <EmojiPickerWrapper>
+                  <EmojiPicker onEmojiClick={onClick} autoFocusSearch={false} />
+                </EmojiPickerWrapper>
+              )}
+              <Emoji unified={message} emojiStyle={EmojiStyle.APPLE} />
+              <SendButton type="submit"> send</SendButton>
+            </form>
+          )) ||
+          (guesser && (
+            <form onSubmit={submitFormGuesser}>
+              <input
+                placeholder="Type Your Guess"
+                value={message}
+                onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                  setMessage(e.currentTarget.value)
+                }
+              />
+              <button type="submit"> send</button>
+            </form>
+          ))
+        : (explainer && <p>Choose a Movie To Explain</p>) ||
+          (guesser && <p>Wait For The Clue</p>)}
+
       <GameWrapper>
         <GuessesWrapper>
           {game?.guesses.map((g) => (
@@ -163,11 +196,11 @@ export const GamePage = () => {
               game.currentMovie && <MovieCard movie={game.currentMovie} />}
 
           {/* Clue */}
-          <div>
+          <ClueWrapper>
             {game?.clues.map((c) => (
-              <p>Clue: {c}</p>
+              <Clue key={c}>{c}</Clue>
             ))}
-          </div>
+          </ClueWrapper>
         </MoviesWrapper>
         {/* PLAYERS */}
         <PlayersWrapper>
@@ -178,6 +211,7 @@ export const GamePage = () => {
       </GameWrapper>
       {explainer && game.guesses.find((g) => g.state === "green") && (
         <button
+          style={{ position: "relative", top: "50%" }}
           onClick={() =>
             socket.emit("game-playerId", thisPlayerId, "", "", "", true)
           }
@@ -199,6 +233,8 @@ const MoviesWrapper = styled.div`
 const GameWrapper = styled.div`
   display: flex;
   gap: 5vw;
+
+  z-index: 2;
 `;
 const PlayersWrapper = styled.div`
   display: flex;
@@ -216,4 +252,65 @@ const GamePageWrapper = styled.div`
   height: 99vh;
   width: 99vw;
   padding: 1vw;
+  background: url("https://static.vecteezy.com/system/resources/thumbnails/001/616/361/original/clip-of-film-reel-and-classic-camera-spinning-with-right-side-light-and-warm-background-in-4k-free-video.jpg");
+  background-size: cover;
+`;
+
+const EmojiInput = styled.input`
+  outline: none;
+  border: 1px solid black;
+  width: 450px;
+  height: 50px;
+  font-size: 25px;
+  padding-left: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 10px;
+`;
+
+const EmojiPickerWrapper = styled.div`
+  position: absolute;
+  top: 12%;
+  left: 33.5%;
+  z-index: 3;
+`;
+
+const ClueWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  left: 20%;
+  height: 70%;
+  width: 60%;
+  background: rgb(255, 255, 255, 0.5);
+  z-index: -1;
+  padding: 30px;
+`;
+
+const Clue = styled.h2`
+  margin: 0;
+  font-size: 40px;
+  align-self: center;
+  padding: 3px;
+`;
+
+const SendButton = styled.button`
+  background: none;
+  border: solid white;
+  border-radius: 5px;
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  padding: 12px;
+  margin: 3px;
+  cursor: pointer;
+  &:hover {
+    background: #ffffff;
+    color: rgb(0, 0, 0, 0.5);
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ffffff, 0 0 25px #ffffff, 0 0 50px #ffffff,
+      0 0 100px #ffffff;
+  }
 `;
