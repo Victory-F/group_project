@@ -6,13 +6,21 @@ export const PlayerCard = ({ player }: { player: Player }) => {
     <PlayerWrapper
       style={
         player.state === "explainer"
-          ? { background: "rgba(0,0,0,0.7)" }
-          : { background: "rgba(255,255,255,0.7)", color: "black" }
+          ? { background: "hsla(34, 100%, 19%, 0.5)" }
+          : { background: "hsla(35, 100%, 77%, 0.9)" }
       }
     >
       <NameScore>
-        <PlayerName>{player.name}</PlayerName>
-        <PlayerScore>⭐ {player.score}</PlayerScore>
+        <PlayerName
+          style={player.state === "guesser" ? { color: "black" } : {}}
+        >
+          {player.name}
+        </PlayerName>
+        <PlayerScore
+          style={player.state === "guesser" ? { color: "black" } : {}}
+        >
+          ⭐ {player.score}
+        </PlayerScore>
       </NameScore>
       <ImageWrapper>
         <PlayerImage src={player.imgUrl} />
@@ -24,12 +32,11 @@ export const PlayerCard = ({ player }: { player: Player }) => {
 const PlayerWrapper = styled.div`
   display: flex;
   justify-content: space-around;
-  width: 18vw;
-  margin: 5px;
+  margin: 4px;
   flex-wrap: wrap;
   min-width: content;
-
   min-height: content;
+  width: 200px;
 `;
 
 const PlayerName = styled.h1`

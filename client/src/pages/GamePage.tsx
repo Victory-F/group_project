@@ -99,7 +99,7 @@ export const GamePage = () => {
                         "game-playerId",
                         thisPlayerId,
                         movies[0],
-                        "green",
+                        "🤩",
                         g.id
                       );
                     }}
@@ -110,13 +110,7 @@ export const GamePage = () => {
                     style={{ display: "block" }}
                     title="you are almost there!"
                     onClick={() =>
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        "",
-                        "yellow",
-                        g.id
-                      )
+                      socket.emit("game-playerId", thisPlayerId, "", "🥵", g.id)
                     }
                   >
                     🥵
@@ -125,13 +119,7 @@ export const GamePage = () => {
                     title="Not at all!"
                     style={{ display: "block" }}
                     onClick={() =>
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        "",
-                        "red",
-                        g.id
-                      )
+                      socket.emit("game-playerId", thisPlayerId, "", "🥶", g.id)
                     }
                   >
                     🥶
@@ -179,8 +167,8 @@ export const GamePage = () => {
                 <SendButton type="submit"> send</SendButton>
               </form>
             ))
-          : (explainer && <p>Choose a Movie To Explain</p>) ||
-            (guesser && <p>Wait For The Clue</p>)}
+          : (explainer && <Header>Choose a Movie To Explain</Header>) ||
+            (guesser && <Header>Wait For The Clue</Header>)}
         {/* Movies */}
         <MoviesWrapper>
           {explainer && movies && movies.length > 1
