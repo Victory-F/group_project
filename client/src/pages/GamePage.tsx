@@ -13,7 +13,6 @@ import EmojiPicker, {
 } from "emoji-picker-react";
 import { Button, Header } from "../styled";
 
-
 export const GamePage = () => {
   const navigate = useNavigate();
   const [game, setGame] = useState<Game | null>(null);
@@ -108,7 +107,7 @@ export const GamePage = () => {
           )) ||
           (guesser && (
             <form onSubmit={submitFormGuesser}>
-              <input
+              <Typing
                 placeholder="Type Your Guess"
                 value={message}
                 onChange={(e: React.FormEvent<HTMLInputElement>) =>
@@ -215,7 +214,7 @@ export const GamePage = () => {
       </GameWrapper>
       {explainer && game.guesses.find((g) => g.state === "green") && (
         <Button
-
+          style={{ position: "absolute", top: "100%" }}
           onClick={() =>
             socket.emit("game-playerId", thisPlayerId, "", "", "", true)
           }
@@ -227,10 +226,6 @@ export const GamePage = () => {
   );
 };
 
-const Clue = styled.p`
-  font-size: 28px;
-  background: rgba(200, 200, 200, 0.4);
-`;
 const MoviesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -283,7 +278,6 @@ const Typing = styled.input`
 
   &:focus {
     outline: none;
-
   }
 `;
 const EmojiInput = styled.input`
@@ -339,5 +333,6 @@ const SendButton = styled.button`
     color: rgb(0, 0, 0, 0.5);
     border-radius: 5px;
     box-shadow: 0 0 5px #ffffff, 0 0 25px #ffffff, 0 0 50px #ffffff,
-      0 0 100px #ffffff;  }
+      0 0 100px #ffffff;
+  }
 `;
