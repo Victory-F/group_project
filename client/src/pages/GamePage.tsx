@@ -92,55 +92,44 @@ export const GamePage = () => {
               {explainer && !game.guesses.find((g) => g.state === "green") && (
                 <div>
                   <button
+                    title="Yaaay well done!"
                     style={{ display: "block" }}
                     onClick={() => {
                       socket.emit(
                         "game-playerId",
                         thisPlayerId,
                         movies[0],
-                        "green",
+                        "🤩",
                         g.id
                       );
                     }}
                   >
-                    True!
+                    🤩
                   </button>
                   <button
                     style={{ display: "block" }}
+                    title="you are almost there!"
                     onClick={() =>
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        "",
-                        "yellow",
-                        g.id
-                      )
+                      socket.emit("game-playerId", thisPlayerId, "", "🥵", g.id)
                     }
                   >
-                    Warm
+                    🥵
                   </button>
                   <button
+                    title="Not at all!"
                     style={{ display: "block" }}
                     onClick={() =>
-                      socket.emit(
-                        "game-playerId",
-                        thisPlayerId,
-                        "",
-                        "red",
-                        g.id
-                      )
+                      socket.emit("game-playerId", thisPlayerId, "", "🥶", g.id)
                     }
                   >
-                    Cold
+                    🥶
                   </button>
                 </div>
               )}
-
             </div>
           </GuessCard>
         ))}
       </GuessesWrapper>
-
 
       <GameWrapper>
         {movies.length === 1 || (game && game?.clues.length > 0)
