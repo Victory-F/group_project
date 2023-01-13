@@ -90,8 +90,8 @@ export const GamePage = () => {
           <GuessCard guess={g}>
             <div>
               {explainer && !game.guesses.find((g) => g.state === "green") && (
-                <div>
-                  <button
+                <Div>
+                  <StateButton
                     title="Yaaay well done!"
                     style={{ display: "block" }}
                     onClick={() => {
@@ -105,8 +105,8 @@ export const GamePage = () => {
                     }}
                   >
                     🤩
-                  </button>
-                  <button
+                  </StateButton>
+                  <StateButton
                     style={{ display: "block" }}
                     title="you are almost there!"
                     onClick={() =>
@@ -120,8 +120,8 @@ export const GamePage = () => {
                     }
                   >
                     🥵
-                  </button>
-                  <button
+                  </StateButton>
+                  <StateButton
                     title="Not at all!"
                     style={{ display: "block" }}
                     onClick={() =>
@@ -135,8 +135,8 @@ export const GamePage = () => {
                     }
                   >
                     🥶
-                  </button>
-                </div>
+                  </StateButton>
+                </Div>
               )}
             </div>
           </GuessCard>
@@ -240,6 +240,10 @@ const GamePageWrapper = styled.div`
   overflow-x: hidden;
   text-align: center;
   font-family: Georgia, "Times New Roman", Times, serif;
+`;
+const Div = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const GuessesWrapper = styled.div`
