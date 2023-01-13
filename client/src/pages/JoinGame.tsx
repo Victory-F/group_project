@@ -34,7 +34,7 @@ export const JoinGame = () => {
               player: { ...joinGameInit.player, name: e.currentTarget.value },
             });
           }}
-          maxLength={15}
+          maxLength={10}
           required
         />
         <Input

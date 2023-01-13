@@ -1,11 +1,11 @@
 import axios from "axios";
-import cluster from "cluster";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Game, Movie } from "../../../types/gameTypes";
 import { GuessCard, MovieCard, PlayerCard } from "../components";
 import { socket } from "../socket/socket";
+import { Button, Header } from "../styled";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ export const GamePage = () => {
     <GamePageWrapper>
       {movies.length === 1 || (game && game?.clues.length > 0) ? (
         <form onSubmit={submitForm}>
-          <input
+          <Typing
             placeholder={
               game?.players.find((player) => player.id === thisPlayerId)
                 ?.state === "explainer"
@@ -79,12 +79,12 @@ export const GamePage = () => {
               setMessage(e.currentTarget.value)
             }
           />
-          <button type="submit"> send</button>
+          <Button type="submit"> send</Button>
         </form>
       ) : explainer ? (
-        <p>Choose a Movie To Explain</p>
+        <Header>Choose a Movie To Explain</Header>
       ) : (
-        <p>Wait For The Clue</p>
+        <Header>Wait For The Clue</Header>
       )}
       <GameWrapper>
         <GuessesWrapper>
@@ -95,6 +95,7 @@ export const GamePage = () => {
                   !game.guesses.find((g) => g.state === "green") && (
                     <div>
                       <button
+                        style={{ display: "block" }}
                         onClick={() => {
                           socket.emit(
                             "game-playerId",
@@ -108,6 +109,7 @@ export const GamePage = () => {
                         True!
                       </button>
                       <button
+                        style={{ display: "block" }}
                         onClick={() =>
                           socket.emit(
                             "game-playerId",
@@ -121,6 +123,7 @@ export const GamePage = () => {
                         Warm
                       </button>
                       <button
+                        style={{ display: "block" }}
                         onClick={() =>
                           socket.emit(
                             "game-playerId",
@@ -165,7 +168,7 @@ export const GamePage = () => {
           {/* Clue */}
           <div>
             {game?.clues.map((c) => (
-              <p>Clue: {c}</p>
+              <Clue>Clue: {c}</Clue>
             ))}
           </div>
         </MoviesWrapper>
@@ -177,23 +180,29 @@ export const GamePage = () => {
         </PlayersWrapper>
       </GameWrapper>
       {explainer && game.guesses.find((g) => g.state === "green") && (
-        <button
+        <Button
           onClick={() =>
             socket.emit("game-playerId", thisPlayerId, "", "", "", true)
           }
         >
           Continue
-        </button>
+        </Button>
       )}
     </GamePageWrapper>
   );
 };
 
+const Clue = styled.p`
+  font-size: 28px;
+  background: rgba(200, 200, 200, 0.4);
+`;
 const MoviesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 5vw;
+  gap: 40px;
   width: 60vw;
+  margin: 60px;
+  margin-left: 500px;
 `;
 
 const GameWrapper = styled.div`
@@ -212,8 +221,30 @@ const GamePageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3vw;
-  height: 99vh;
-  width: 99vw;
-  padding: 1vw;
+  min-height: 850px;
+  padding-buttom: 40px;
+  width: 100%;
+  background: url("https://static.vecteezy.com/system/resources/thumbnails/001/616/361/original/clip-of-film-reel-and-classic-camera-spinning-with-right-side-light-and-warm-background-in-4k-free-video.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow-x: hidden;
+
+  text-align: center;
+  font-family: Georgia, "Times New Roman", Times, serif;
+`;
+const Typing = styled.input`
+  margin-top: 60px;
+  display: block;
+  width: 170px;
+  height: 40px;
+  padding: 0 10px;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: unset;
+
+  &:focus {
+    outline: none;
+  }
 `;
