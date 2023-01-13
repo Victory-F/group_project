@@ -35,7 +35,7 @@ export const CreateGame = () => {
               player: { ...createGameInit.player, name: e.currentTarget.value },
             });
           }}
-          maxLength={15}
+          maxLength={10}
           required
         />
         <Input

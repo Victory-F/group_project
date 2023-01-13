@@ -12,18 +12,33 @@ export const MovieCard = ({
     <CardWrapper>
       <MovieName>{movie.name}</MovieName>
       <MovieImage src={movie.poster} />
-      {onClick && <button onClick={onClick}>choose</button>}
+      {onClick && <BtoChoose onClick={onClick}>choose</BtoChoose>}
     </CardWrapper>
   );
 };
-
+const BtoChoose = styled.button`
+  font-size: 15px;
+  width: 55px;
+  margin: auto;
+  background: transparent;
+  border: none;
+  color: white;
+`;
 const CardWrapper = styled.div`
   display: flex;
+
   flex-direction: column;
   flex-wrap: wrap;
   width: 15vw;
-  height: 15vw;
-  border: solid black;
+  height: 21vw;
+  border: solid gray 1px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  &:hover {
+    background: rgba(200, 200, 200, 0.4);
+    color: black;
+  }
 `;
 
 const MovieName = styled.h1`
@@ -32,6 +47,7 @@ const MovieName = styled.h1`
 `;
 
 const MovieImage = styled.img`
-  max-height: 10vw;
-  max-width: 10vw;
+  max-height: 13vw;
+  max-width: 13vw;
+  margin: auto;
 `;
