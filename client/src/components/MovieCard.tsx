@@ -8,7 +8,6 @@ export const MovieCard = ({
   movie: Movie;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) => {
-  console.log(movie);
   return (
     <CardWrapper>
       <MovieName>{movie.name}</MovieName>
