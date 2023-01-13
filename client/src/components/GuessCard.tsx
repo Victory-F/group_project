@@ -29,11 +29,10 @@ const GuessWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  background: rgba(255, 255, 255, 0.4);
-  display: flex;
-  justify-content: space-around;
-  margin: 5px;
+  background: hsla(34, 100%, 19%, 0.5);
+  margin: 4px;
   flex-wrap: wrap;
+  height: 50px;
   min-width: content;
 `;
 const PlayerName = styled.h1`
