@@ -30,7 +30,11 @@ export const LobbyPage = () => {
 
   return (
     <LobbyP>
-      <Header>Code: {game?.id}</Header>
+      <H1>
+        CODE <br />
+        <br />
+        <Span> {game?.id}</Span>
+      </H1>
       <PlayersWrapper>
         {game?.players.map((p) => (
           <PlayerCard player={p} />
@@ -52,6 +56,13 @@ export const LobbyPage = () => {
   );
 };
 
+const Span = styled.span`
+  border: solid white 1.5px;
+  padding: 7px;
+  box-shadow: 0 0 5px #ffffff, 0 0 25px #ffffff, 0 0 50px #ffffff,
+    0 0 100px #ffffff;
+  border-radius: 10px;
+`;
 const ButtonLobby = styled(Button)`
   margin-top: 100px;
 `;
@@ -77,4 +88,9 @@ const PlayersWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-left: 300px;
+`;
+
+const H1 = styled.h1`
+  padding-top: 40px;
+  color: white;
 `;

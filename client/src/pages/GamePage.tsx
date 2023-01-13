@@ -11,7 +11,7 @@ import EmojiPicker, {
   EmojiClickData,
   Emoji,
 } from "emoji-picker-react";
-import { Button, Header } from "../styled";
+import { Button, Header, StateButton } from "../styled";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -135,10 +135,12 @@ export const GamePage = () => {
                   </button>
                 </div>
               )}
+
             </div>
           </GuessCard>
         ))}
       </GuessesWrapper>
+
 
       <GameWrapper>
         {movies.length === 1 || (game && game?.clues.length > 0)

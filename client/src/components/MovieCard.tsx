@@ -23,6 +23,14 @@ const BtoChoose = styled.button`
   background: transparent;
   border: none;
   color: white;
+  cursor: pointer;
+
+  &:hover {
+    text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+      0 0 42px rgb(255, 255, 255), 0 0 82px rgb(255, 255, 255),
+      0 0 92px rgb(255, 255, 255), 0 0 102px rgb(255, 255, 255),
+      0 0 151px rgb(255, 255, 255);
+  }
 `;
 const CardWrapper = styled.div`
   display: flex;
@@ -31,14 +39,10 @@ const CardWrapper = styled.div`
   flex-wrap: wrap;
   width: 15vw;
   height: 21vw;
-  border: solid gray 1px;
+  border-radius: 7px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 10px;
-  &:hover {
-    background: rgba(200, 200, 200, 0.4);
-    color: black;
-  }
 `;
 
 const MovieName = styled.h1`
