@@ -15,7 +15,7 @@ export const HomePage = () => {
         <source src="home.mp4" type="video/mp4" />
       </Video>
       <Text>
-        <Name>MoviEmoji</Name>
+        <h1>MoviEmoji</h1>
         <Button onClick={navigateCreate}>
           <ButtonSpan></ButtonSpan>
           <ButtonSpan></ButtonSpan>
@@ -50,7 +50,4 @@ const HomeWrapper = styled.div`
   width: 100%;
   height: 100%;
   align-items: center;
-`;
-const Name = styled.h1`
-  text-align: center;
 `;
