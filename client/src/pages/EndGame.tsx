@@ -4,6 +4,7 @@ import { socket } from "../socket/socket";
 import { useNavigate } from "react-router-dom";
 import { Button, Header } from "../styled";
 import styled from "styled-components";
+import { PlayerCard } from "../components";
 
 export const EndGame = () => {
   const [game, setGame] = useState<Game | null>(null);
@@ -21,11 +22,12 @@ export const EndGame = () => {
       <Header>🏆 CONGRATULATION 🏆 </Header>
 
       {game?.players.map((p) => (
-        <div>
-          <EndImg src={p.imgUrl} alt="player" />
-          <P>Name:{p.name}</P>
-          <P>Score:{p.score}</P>
-        </div>
+        // <div>
+        //   <EndImg src={p.imgUrl} alt="player" />
+        //   <P>Name:{p.name}</P>
+        //   <P>Score:{p.score}</P>
+        // </div>
+        <PlayerCard player={p} />
       ))}
       <Button onClick={() => navigate("/")}>New Game</Button>
     </End>
