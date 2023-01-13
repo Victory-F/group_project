@@ -18,7 +18,7 @@ export const EndGame = () => {
 
   return (
     <End>
-      <Header>🏆 Congratulatios 🏆 </Header>
+      <Header>🏆 CONGRATULATION 🏆 </Header>
 
       {game?.players.map((p) => (
         <div>

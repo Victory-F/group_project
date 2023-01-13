@@ -11,7 +11,7 @@ import EmojiPicker, {
   EmojiClickData,
   Emoji,
 } from "emoji-picker-react";
-import { Button, Header } from "../styled";
+import { Button, Header, StateButton } from "../styled";
 
 export const GamePage = () => {
   const navigate = useNavigate();
@@ -117,7 +117,7 @@ export const GamePage = () => {
               <button type="submit"> send</button>
             </form>
           ))
-        : (explainer && <p>Choose a Movie To Explain</p>) ||
+        : (explainer && <Header>Choose a Movie To Explain</Header>) ||
           (guesser && <p>Wait For The Clue</p>)}
       <GameWrapper>
         <GuessesWrapper>
@@ -127,48 +127,51 @@ export const GamePage = () => {
                 {explainer &&
                   !game.guesses.find((g) => g.state === "green") && (
                     <div>
-                      <button
+                      <StateButton
+                        title="yaaay! well done"
                         style={{ display: "block" }}
                         onClick={() => {
                           socket.emit(
                             "game-playerId",
                             thisPlayerId,
                             movies[0],
-                            "green",
+                            "🤩",
                             g.id
                           );
                         }}
                       >
-                        True!
-                      </button>
-                      <button
+                        🤩
+                      </StateButton>
+                      <StateButton
+                        title="you are almost there!"
                         style={{ display: "block" }}
                         onClick={() =>
                           socket.emit(
                             "game-playerId",
                             thisPlayerId,
                             "",
-                            "yellow",
+                            "🥵",
                             g.id
                           )
                         }
                       >
-                        Warm
-                      </button>
-                      <button
+                        🥵
+                      </StateButton>
+                      <StateButton
+                        title="it was wrong!"
                         style={{ display: "block" }}
                         onClick={() =>
                           socket.emit(
                             "game-playerId",
                             thisPlayerId,
                             "",
-                            "red",
+                            "🥶",
                             g.id
                           )
                         }
                       >
-                        Cold
-                      </button>
+                        🥶
+                      </StateButton>
                     </div>
                   )}
               </div>
