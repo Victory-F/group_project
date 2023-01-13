@@ -99,7 +99,7 @@ export const GamePage = () => {
                         "game-playerId",
                         thisPlayerId,
                         movies[0],
-                        "🤩",
+                        "green",
                         g.id
                       );
                     }}
@@ -110,7 +110,13 @@ export const GamePage = () => {
                     style={{ display: "block" }}
                     title="you are almost there!"
                     onClick={() =>
-                      socket.emit("game-playerId", thisPlayerId, "", "🥵", g.id)
+                      socket.emit(
+                        "game-playerId",
+                        thisPlayerId,
+                        "",
+                        "yellow",
+                        g.id
+                      )
                     }
                   >
                     🥵
@@ -119,7 +125,13 @@ export const GamePage = () => {
                     title="Not at all!"
                     style={{ display: "block" }}
                     onClick={() =>
-                      socket.emit("game-playerId", thisPlayerId, "", "🥶", g.id)
+                      socket.emit(
+                        "game-playerId",
+                        thisPlayerId,
+                        "",
+                        "red",
+                        g.id
+                      )
                     }
                   >
                     🥶
