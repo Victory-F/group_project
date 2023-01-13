@@ -13,7 +13,12 @@ export const GuessCard = ({
     <GuessWrapper>
       <PlayerName>{guess.playerName}:</PlayerName>
       <PlayerMessage>{guess.text}</PlayerMessage>
-      <PlayerMessage>{guess.state}</PlayerMessage>
+      <PlayerMessage>
+        {guess.state === "red" ? <p>🥶️</p> : null}
+        {guess.state === "white" ? <p>❓️</p> : null}
+        {guess.state === "green" ? <p>🤩️</p> : null}
+        {guess.state === "yellow" ? <p>🥵️</p> : null}
+      </PlayerMessage>
 
       {children}
     </GuessWrapper>
