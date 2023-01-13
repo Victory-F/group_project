@@ -85,100 +85,101 @@ export const GamePage = () => {
 
   return (
     <GamePageWrapper>
-      {movies.length === 1 || (game && game?.clues.length > 0)
-        ? (explainer && (
-            <form onSubmit={submitFormExplainer}>
-              <EmojiInput
-                onClick={() => setEmojiOpen(!emojiOpen)}
-                placeholder="Enter the Emojis"
-                value={message}
-                onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  setMessage(e.currentTarget.value)
-                }
-              />
-              {emojiOpen && (
-                <EmojiPickerWrapper>
-                  <EmojiPicker onEmojiClick={onClick} autoFocusSearch={false} />
-                </EmojiPickerWrapper>
+      <GuessesWrapper>
+        {game?.guesses.map((g) => (
+          <GuessCard guess={g}>
+            <div>
+              {explainer && !game.guesses.find((g) => g.state === "green") && (
+                <div>
+                  <button
+                    style={{ display: "block" }}
+                    onClick={() => {
+                      socket.emit(
+                        "game-playerId",
+                        thisPlayerId,
+                        movies[0],
+                        "green",
+                        g.id
+                      );
+                    }}
+                  >
+                    True!
+                  </button>
+                  <button
+                    style={{ display: "block" }}
+                    onClick={() =>
+                      socket.emit(
+                        "game-playerId",
+                        thisPlayerId,
+                        "",
+                        "yellow",
+                        g.id
+                      )
+                    }
+                  >
+                    Warm
+                  </button>
+                  <button
+                    style={{ display: "block" }}
+                    onClick={() =>
+                      socket.emit(
+                        "game-playerId",
+                        thisPlayerId,
+                        "",
+                        "red",
+                        g.id
+                      )
+                    }
+                  >
+                    Cold
+                  </button>
+                </div>
               )}
-              <Emoji unified={message} emojiStyle={EmojiStyle.APPLE} />
-              <SendButton type="submit"> send</SendButton>
-            </form>
-          )) ||
-          (guesser && (
-            <form onSubmit={submitFormGuesser}>
-              <Typing
-                placeholder="Type Your Guess"
-                value={message}
-                onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  setMessage(e.currentTarget.value)
-                }
-              />
-              <button type="submit"> send</button>
-            </form>
-          ))
-        : (explainer && <Header>Choose a Movie To Explain</Header>) ||
-          (guesser && <p>Wait For The Clue</p>)}
-      <GameWrapper>
-        <GuessesWrapper>
-          {game?.guesses.map((g) => (
-            <GuessCard guess={g}>
-              <div>
-                {explainer &&
-                  !game.guesses.find((g) => g.state === "green") && (
-                    <div>
-                      <StateButton
-                        title="yaaay! well done"
-                        style={{ display: "block" }}
-                        onClick={() => {
-                          socket.emit(
-                            "game-playerId",
-                            thisPlayerId,
-                            movies[0],
-                            "🤩",
-                            g.id
-                          );
-                        }}
-                      >
-                        🤩
-                      </StateButton>
-                      <StateButton
-                        title="you are almost there!"
-                        style={{ display: "block" }}
-                        onClick={() =>
-                          socket.emit(
-                            "game-playerId",
-                            thisPlayerId,
-                            "",
-                            "🥵",
-                            g.id
-                          )
-                        }
-                      >
-                        🥵
-                      </StateButton>
-                      <StateButton
-                        title="it was wrong!"
-                        style={{ display: "block" }}
-                        onClick={() =>
-                          socket.emit(
-                            "game-playerId",
-                            thisPlayerId,
-                            "",
-                            "🥶",
-                            g.id
-                          )
-                        }
-                      >
-                        🥶
-                      </StateButton>
-                    </div>
-                  )}
-              </div>
-            </GuessCard>
-          ))}
-        </GuessesWrapper>
 
+            </div>
+          </GuessCard>
+        ))}
+      </GuessesWrapper>
+
+
+      <GameWrapper>
+        {movies.length === 1 || (game && game?.clues.length > 0)
+          ? (explainer && (
+              <form onSubmit={submitFormExplainer}>
+                <EmojiInput
+                  onClick={() => setEmojiOpen(!emojiOpen)}
+                  placeholder="Enter the Emojis"
+                  value={message}
+                  onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                    setMessage(e.currentTarget.value)
+                  }
+                />
+                {emojiOpen && (
+                  <EmojiPickerWrapper>
+                    <EmojiPicker
+                      onEmojiClick={onClick}
+                      autoFocusSearch={false}
+                    />
+                  </EmojiPickerWrapper>
+                )}
+                <Emoji unified={message} emojiStyle={EmojiStyle.APPLE} />
+                <SendButton type="submit"> send</SendButton>
+              </form>
+            )) ||
+            (guesser && (
+              <form onSubmit={submitFormGuesser}>
+                <Typing
+                  placeholder="Type Your Guess"
+                  value={message}
+                  onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                    setMessage(e.currentTarget.value)
+                  }
+                />
+                <SendButton type="submit"> send</SendButton>
+              </form>
+            ))
+          : (explainer && <p>Choose a Movie To Explain</p>) ||
+            (guesser && <p>Wait For The Clue</p>)}
         {/* Movies */}
         <MoviesWrapper>
           {explainer && movies && movies.length > 1
@@ -200,119 +201,99 @@ export const GamePage = () => {
             : game &&
               game.guesses.find((g) => g.state === "green") &&
               game.currentMovie && <MovieCard movie={game.currentMovie} />}
-
-          {/* Clue */}
-          <ClueWrapper>
-            {game?.clues.map((c) => (
-              <Clue key={c}>{c}</Clue>
-            ))}
-          </ClueWrapper>
         </MoviesWrapper>
-        {/* PLAYERS */}
-        <PlayersWrapper>
-          {game?.players.map((p) => (
-            <PlayerCard player={p} />
+        {/* Clue */}
+        <ClueWrapper>
+          {game?.clues.map((c) => (
+            <Clue key={c}>{c}</Clue>
           ))}
-        </PlayersWrapper>
+        </ClueWrapper>
+        {explainer && game.guesses.find((g) => g.state === "green") && (
+          <Button
+            onClick={() =>
+              socket.emit("game-playerId", thisPlayerId, "", "", "", true)
+            }
+          >
+            Continue
+          </Button>
+        )}
       </GameWrapper>
-      {explainer && game.guesses.find((g) => g.state === "green") && (
-        <Button
-          style={{ position: "absolute", top: "100%" }}
-          onClick={() =>
-            socket.emit("game-playerId", thisPlayerId, "", "", "", true)
-          }
-        >
-          Continue
-        </Button>
-      )}
+      {/* PLAYERS */}
+      <PlayersWrapper>
+        {game?.players.map((p) => (
+          <PlayerCard player={p} />
+        ))}
+      </PlayersWrapper>
     </GamePageWrapper>
   );
 };
 
-const MoviesWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  width: 60vw;
-  margin: 60px;
-  margin-left: 500px;
-`;
-
-const GameWrapper = styled.div`
-  display: flex;
-  gap: 5vw;
-
-  z-index: 2;
-`;
-const PlayersWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const GuessesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 const GamePageWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 850px;
-  padding-buttom: 40px;
-  width: 100%;
+
+  align-items: start;
+  width: 100vw;
+  height: 100vh;
   background: url("https://static.vecteezy.com/system/resources/thumbnails/001/616/361/original/clip-of-film-reel-and-classic-camera-spinning-with-right-side-light-and-warm-background-in-4k-free-video.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
   background-size: cover;
   overflow-x: hidden;
-
   text-align: center;
   font-family: Georgia, "Times New Roman", Times, serif;
 `;
-const Typing = styled.input`
-  margin-top: 60px;
-  display: block;
-  width: 170px;
-  height: 40px;
-  padding: 0 10px;
-  border: 2px solid rgb(255, 255, 255);
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: unset;
 
-  &:focus {
-    outline: none;
-  }
+const GuessesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 20%;
 `;
+
+const MoviesWrapper = styled.div`
+  position: absolute;
+  top: 10%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 60%;
+`;
+
+const GameWrapper = styled.div`
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+`;
+
 const EmojiInput = styled.input`
   outline: none;
   border: 1px solid black;
-  width: 450px;
-  height: 50px;
+  width: 75%;
+  height: 40px;
   font-size: 25px;
-  padding-left: 12px;
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 10px;
 `;
 
-const EmojiPickerWrapper = styled.div`
-  position: absolute;
-  top: 12%;
-  left: 33.5%;
-  z-index: 3;
+const PlayersWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 20%;
 `;
 const ClueWrapper = styled.div`
-  position: absolute;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
-  left: 20%;
-  height: 70%;
-  width: 60%;
+  height: 500px;
+  width: 100%;
   background: rgb(255, 255, 255, 0.5);
-  z-index: -1;
-  padding: 30px;
+  // z-index: -1;
+  // padding: 30px;
+`;
+
+const EmojiPickerWrapper = styled.div`
+  position: absolute;
+  top: 10%;
+  left: 37%;
+  z-index: 3;
 `;
 
 const Clue = styled.h2`
@@ -338,4 +319,15 @@ const SendButton = styled.button`
     box-shadow: 0 0 5px #ffffff, 0 0 25px #ffffff, 0 0 50px #ffffff,
       0 0 100px #ffffff;
   }
+`;
+
+const Typing = styled.input`
+  outline: none;
+  border: 1px solid black;
+  width: 75%;
+  height: 40px;
+  font-size: 25px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 10px;
 `;
