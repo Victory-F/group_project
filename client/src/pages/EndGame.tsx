@@ -22,26 +22,12 @@ export const EndGame = () => {
       <Header>🏆 CONGRATULATION 🏆 </Header>
 
       {game?.players.map((p) => (
-        // <div>
-        //   <EndImg src={p.imgUrl} alt="player" />
-        //   <P>Name:{p.name}</P>
-        //   <P>Score:{p.score}</P>
-        // </div>
-        <PlayerCard player={p} />
+        <PlayerCard player={p} style={{ backgroundColor: "#6e2411" }} />
       ))}
       <Button onClick={() => navigate("/")}>New Game</Button>
     </End>
   );
 };
-
-const P = styled.p`
-  background: black;
-`;
-
-const EndImg = styled.img`
-  width: 150px;
-  margin-top: 40px;
-`;
 
 const End = styled.div`
   display: flex;

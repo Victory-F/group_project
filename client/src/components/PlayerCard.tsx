@@ -1,11 +1,19 @@
 import styled from "styled-components";
 import { Player } from "../../../types/gameTypes";
 
-export const PlayerCard = ({ player }: { player: Player }) => {
+export const PlayerCard = ({
+  player,
+  style,
+}: {
+  player: Player;
+  style?: React.CSSProperties;
+}) => {
   return (
     <PlayerWrapper
       style={
-        player.state === "explainer"
+        style
+          ? style
+          : player.state === "explainer"
           ? { background: "hsla(34, 100%, 19%, 0.5)" }
           : { background: "hsla(35, 100%, 77%, 0.9)", color: "black" }
       }
@@ -27,7 +35,7 @@ const PlayerWrapper = styled.div`
   margin: 4px;
   flex-wrap: wrap;
   min-width: content;
-  width: 250px;
+  width: 215px;
   min-height: content;
 `;
 

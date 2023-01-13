@@ -35,7 +35,7 @@ export const GamePage = () => {
       try {
         const response = await axios.get(
           `https://api.themoviedb.org/3/movie/top_rated?api_key=a0fdd7d682edade22bbce21b7ecf4554&language=en-US&page=${
-            Math.floor(Math.random() * 500) + 1
+            Math.floor(Math.random() * 100) + 1
           }`
         );
         const randomMoviesArr = [...response.data.results]

@@ -87,7 +87,6 @@ const LobbyP = styled.div`
 const PlayersWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-left: 300px;
 `;
 
 const H1 = styled.h1`

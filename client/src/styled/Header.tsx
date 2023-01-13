@@ -6,10 +6,10 @@ export const Header = styled.h1`
     0 0 151px rgb(255, 255, 255);
   text-align: center;
   color: #fff;
-  padding-top: 60px;
-  padding-bottom: 20px;
+  padding: 10px;
   color: rgb(0, 0, 0);
   font-size: 28px;
   font-family: "lorem";
   letter-spacing: 5px;
+  margin: 0;
 `;
