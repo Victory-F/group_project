@@ -179,8 +179,8 @@ export const GamePage = () => {
                 <SendButton type="submit"> send</SendButton>
               </form>
             ))
-          : (explainer && <p>Choose a Movie To Explain</p>) ||
-            (guesser && <p>Wait For The Clue</p>)}
+          : (explainer && <Header>Choose a Movie To Explain</Header>) ||
+            (guesser && <Header>Wait For The Clue</Header>)}
         {/* Movies */}
 
         {explainer && movies && movies.length > 1 ? (

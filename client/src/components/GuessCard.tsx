@@ -28,6 +28,7 @@ export const GuessCard = ({
 
 const GuessWrapper = styled.div`
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   background: rgba(255, 255, 255, 0.4);
