@@ -93,7 +93,10 @@ io.on("connection", (socket: Socket) => {
     try {
       //check the code
       const canJoin: boolean = games.find(
-        (g) => g.id === joinGameInit.code && g.players.length < 10
+        (g) =>
+          g.id === joinGameInit.code &&
+          g.players.length < 10 &&
+          g.state === "lobby"
       )
         ? true
         : false;
