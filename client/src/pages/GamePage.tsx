@@ -264,7 +264,7 @@ const ButtonsWrapper = styled.div`
 
 const GuessesWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   width: 20%;
 `;
 
