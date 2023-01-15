@@ -18,6 +18,7 @@ export const CreateGame = () => {
       if (!response.success) {
         console.log(response.message);
       } else {
+        localStorage.setItem("id", socket.id);
         navigate("/lobby");
       }
     });

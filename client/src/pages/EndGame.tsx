@@ -8,7 +8,7 @@ import { PlayerCard } from "../components";
 
 export const EndGame = () => {
   const [game, setGame] = useState<Game | null>(null);
-  const playerId = socket.id;
+  const playerId = localStorage.getItem("id");
   const navigate = useNavigate();
   useEffect(() => {
     socket.emit("game-playerId", playerId);

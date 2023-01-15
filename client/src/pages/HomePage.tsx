@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { socket } from "../socket/socket";
 import { Button, ButtonSpan, Text } from "../styled";
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -9,6 +11,10 @@ export const HomePage = () => {
   const navigateJoin = () => {
     navigate("/join");
   };
+  useEffect(() => {
+    socket.emit("delete-player", localStorage.getItem("id"));
+    localStorage.clear();
+  }, []);
   return (
     <HomeWrapper>
       <Video loop autoPlay muted>

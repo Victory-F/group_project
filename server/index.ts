@@ -27,23 +27,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 let games: Game[] = [];
 
 io.on("connection", (socket: Socket) => {
-  console.log("connected", socket.id);
-
-  socket.on("disconnect", () => {
-    // console.log("disconected", socket.id);
-
-    games = games.map((g) =>
-      g.players.find((p) => p.id === socket.id)
-        ? { ...g, players: g.players.filter((p) => p.id !== socket.id) }
-        : g
-    );
-    games = games.filter((g) =>
-      g.state === "lobby" ? g.players.length > 0 : g.players.length > 1
-    );
-
-    console.log(games.length);
-  });
-
   //create game
   socket.on(
     "create-game",
@@ -359,6 +342,23 @@ io.on("connection", (socket: Socket) => {
       }
     }
   );
+  //delete player
+  socket.on("delete-player", (playerId: string) => {
+    try {
+      if (playerId) {
+        games = games.map((g) =>
+          g.players.find((p) => p.id === playerId)
+            ? { ...g, players: g.players.filter((p) => p.id !== playerId) }
+            : g
+        );
+        games = games.filter((g) =>
+          g.state === "lobby" ? g.players.length > 0 : g.players.length > 1
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
 });
 
 server.listen(PORT, () => {

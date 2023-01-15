@@ -20,7 +20,7 @@ export const GamePage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [message, setMessage] = useState<string>("");
 
-  const thisPlayerId = socket.id;
+  const thisPlayerId = localStorage.getItem("id");
 
   const explainer =
     game?.players.find((player) => player.id === thisPlayerId)?.state ===

@@ -3,12 +3,12 @@ import { Game, Reply } from "../../../types/gameTypes";
 import { socket } from "../socket/socket";
 import { useNavigate } from "react-router-dom";
 import { PlayerCard } from "../components";
-import { Button, Header } from "../styled";
+import { Button } from "../styled";
 import styled from "styled-components";
 
 export const LobbyPage = () => {
   const [game, setGame] = useState<Game | null>(null);
-  const thisPlayerId = socket.id;
+  const thisPlayerId = localStorage.getItem("id");
   const navigate = useNavigate();
 
   useEffect(() => {
