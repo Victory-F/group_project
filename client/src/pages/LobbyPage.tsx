@@ -26,6 +26,7 @@ export const LobbyPage = () => {
         navigate("/game");
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

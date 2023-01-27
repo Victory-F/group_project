@@ -15,6 +15,7 @@ export const EndGame = () => {
     socket.on("game", (gameFromServer: Game) => {
       setGame(gameFromServer);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

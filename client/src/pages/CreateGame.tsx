@@ -13,7 +13,6 @@ export const CreateGame = () => {
   const navigate = useNavigate();
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     socket.emit("create-game", createGameInit, (response: Reply) => {
       if (!response.success) {
         console.log(response.message);
